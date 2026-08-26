@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    # ubuntu-latest: nothing the tests exercise is platform-specific — pure
+    # Python (SQLite via stdlib, httpx/selectolax/pydantic all ship Linux
+    # wheels). scripts/register_scheduled_task.ps1 is genuinely
+    # Windows-only (registers a Windows Task Scheduler job) but it's a
+    # standalone ops script, never imported by the package or by any test,
+    # and compileall doesn't even touch it (it only byte-compiles .py
+    # files) — it just isn't part of what this workflow verifies.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          # NOT the newest Python: verified locally (2026-08-26) that
+          # `pip install -e ".[dev]"` on Python 3.14 fails with
+          # ResolutionImpossible — pydantic-core has no prebuilt wheel for
+          # cp314 yet (too new) and building it from source needs a Rust
+          # toolchain this project doesn't otherwise use. 3.11 is
+          # pyproject.toml's stated floor (requires-python = ">=3.11") and
+          # installs cleanly with prebuilt wheels for every dependency,
+          # confirmed by an actual local `pip install` + `pytest` run.
+
+      - name: Install package + dev dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Compile-check every module (src, tests, scripts)
+        run: python -m compileall -q src tests scripts
+
+      - name: Import the CLI (catches import-time errors compileall can't)
+        run: python -c "from pc_price_tracker.cli import app"
+
+      - name: Run test suite
+        # 99 tests, all offline: driven by tests/fixtures/*.json (real
+        # captured Regard listings) and config/data YAML checked into the
+        # repo, or exercising BaseSource against a fake httpx.Client
+        # stand-in (test_source_base.py) — nothing here makes a real
+        # network call. Verified locally before this workflow was written:
+        # `pytest -q` -> "99 passed in 0.52s".
+        run: python -m pytest -q
+
+  # Deliberately NOT covered by this workflow, and why:
+  #
+  # - Live scraping against Regard/Citilink
+  #   (src/pc_price_tracker/sources/{regard,citilink}.py) needs real
+  #   network access to third-party retail sites from a CI runner, which is
+  #   both unreliable (markup drift, WAF/rate-limiting — citilink.py's own
+  #   module docstring documents it being permanently 429-blocked by
+  #   Qrator) and not something this project should be hammering those
+  #   sites with on every push/PR. The request-handling and normalization
+  #   logic that actually matters (robots.txt handling, WAF detection,
+  #   retry/backoff, cross-source key matching) is already covered offline
+  #   by test_source_base.py and test_cross_source_matching.py.
+  # - The affiliate feed adapter (sources/affiliate_feed.py) is tested
+  #   against a hand-built sample feed (test_affiliate_feed.py) rather than
+  #   a live Admitad/ePN feed: config/feeds.yaml ships with feed_url: null
+  #   for both networks — no real feed has been connected yet, so there's
+  #   nothing live to test against.
+  # - scripts/run_daily_scrape.py and scripts/register_scheduled_task.ps1
+  #   are the real production entry points (Windows Task Scheduler, daily
+  #   04:00 run against live sites) — exercised here only by the
+  #   compileall syntax check above (run_daily_scrape.py; the .ps1 isn't
+  #   Python at all), since actually running either one means live
+  #   scraping (see above) and, for the .ps1, a Windows runner this
+  #   project doesn't otherwise need.
