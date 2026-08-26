@@ -1,0 +1,87 @@
+# Brand alias table used as a fallback when a source doesn't supply a
+# structured vendor field (RawOffer.brand_hint) and the brand has to be
+# guessed from free-text title. Keys are lowercase tokens as they might
+# appear in a title, values are the canonical brand name we store.
+brand_aliases:
+  nvidia: NVIDIA
+  geforce: NVIDIA
+  amd: AMD
+  radeon: AMD
+  intel: Intel
+  asus: ASUS
+  msi: MSI
+  gigabyte: Gigabyte
+  asrock: ASRock
+  biostar: Biostar
+  colorful: Colorful
+  palit: Palit
+  kfa2: KFA2
+  gainward: Gainward
+  zotac: Zotac
+  inno3d: Inno3D
+  pny: PNY
+  kingston: Kingston
+  corsair: Corsair
+  gskill: G.Skill
+  g.skill: G.Skill
+  crucial: Crucial
+  adata: ADATA
+  xpg: ADATA
+  patriot: Patriot
+  teamgroup: TeamGroup
+  team: TeamGroup
+  geil: GeIL
+  apacer: Apacer
+  samsung: Samsung
+  wd: WD
+  westerndigital: WD
+  seagate: Seagate
+  kingspec: KingSpec
+  deepcool: DeepCool
+  coolermaster: Cooler Master
+  bequiet: be quiet!
+  thermalright: Thermalright
+  thermaltake: Thermaltake
+  noctua: Noctua
+  zalman: Zalman
+  idcooling: ID-COOLING
+  aerocool: AeroCool
+  gamemax: GameMax
+  chieftec: Chieftec
+  fsp: FSP
+  seasonic: Seasonic
+  exegate: ExeGate
+  fractal: Fractal Design
+  lianli: Lian Li
+  nzxt: NZXT
+  antec: Antec
+
+# Marketing / chip-brand words that add no identifying information once the
+# real brand (AIB partner, module maker, ...) is already known, so they are
+# dropped before the remaining title text is tokenized into a model name.
+#
+# Includes Russian category-prefix nouns ("Процессор AMD Ryzen ...") even
+# though Regard's own `title` field happens not to need it (it keeps the
+# category word only in `full_title`) — a different source is very likely
+# to put the category word right in the name, and without stripping it two
+# stores' listings for the same physical product would tokenize to
+# different keys and never collapse into one product.
+noise_words:
+  - NVIDIA
+  - GeForce
+  - AMD
+  - Radeon
+  - Intel
+  - Процессор
+  - Видеокарта
+  - Материнская плата
+  - Оперативная память
+  - Накопитель
+  - Внутренний
+  - Блок питания
+  - Корпус
+  - Кулер
+  - Graphics
+  - Video
+  - Card
+  - Series

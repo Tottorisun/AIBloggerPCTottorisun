@@ -1,0 +1,133 @@
+# Правила отбора по бренду/спецификации для build — ВЕДЁТСЯ ВРУЧНУЮ, не
+# выводится ни из каких данных и не обновляется автоматически. Позиции,
+# не прошедшие правило, НЕ участвуют в build, но остаются в БД как есть —
+# это фильтр подбора, а не модерация каталога.
+#
+# Обрабатывается builder._apply_brand_rules универсально по любой
+# категории, присутствующей здесь — какие проверки применяются, зависит
+# только от того, какие ключи заданы в секции категории:
+#   whitelist                                  -> членство по бренду
+#   min_certification / min_certification_profiles  -> мин. уровень сертификата (PSU)
+#   require_dram_cache_profiles                -> требование по спеке (SSD)
+#   chipsets_by_profile                        -> разрешённые чипсеты по профилю (motherboard)
+#   min_fans / min_fans_profiles                -> минимум по числовой спеке (case)
+# Если нужный параметр не извлёкся из данных источника — правило для этой
+# позиции пропускается (не отбраковываем вслепую), а не отбрасывает её.
+
+psu:
+  whitelist:
+    - Seasonic
+    - SeaSonic
+    - Corsair
+    - be quiet!
+    - Be Quiet
+    - FSP
+    - Chieftec
+    - Thermaltake
+    - DeepCool
+    - GamerStorm  # суббренд DeepCool (см. data/performance_tiers.yaml случай "850W GamerStorm (DeepCool)")
+    - Zalman
+    - MSI
+    - ASUS
+    - Gigabyte
+    - Super Flower
+    - Silverstone
+    - Phanteks
+    - Thermalright
+    - Lian Li
+    - InWin
+
+  # Профили, для которых обязателен сертификат не ниже min_certification.
+  # Уровни 80 PLUS по возрастанию: "80 PLUS" (базовый), Bronze, Silver,
+  # Gold, Platinum, Titanium.
+  min_certification: "80 PLUS Bronze"
+  min_certification_profiles: [gaming, workstation]
+
+ssd:
+  whitelist:
+    - Samsung
+    - WD
+    - SanDisk
+    - Crucial
+    - Kingston
+    - Micron
+    - Kioxia
+    - Intel
+    - Solidigm
+    - ADATA
+    - Transcend
+    - Patriot Memory
+    - Apacer
+    - Silicon Power
+
+  # Профили, где нужен DRAM-кэш — но только когда параметр вообще удалось
+  # извлечь из описания источника (см. normalize.py: specs["dram_cache_mb"]
+  # присутствует только если магазин явно указал ёмкость кэша; его
+  # отсутствие в данных не означает "кэша нет", поэтому такие позиции не
+  # отбраковываются этим правилом — только те, где кэш явно 0/отсутствует).
+  require_dram_cache_profiles: [gaming]
+
+gpu:
+  whitelist:
+    - ASUS
+    - MSI
+    - Gigabyte
+    - Palit
+    - Gainward
+    - Zotac
+    - Sapphire
+    - PowerColor
+    - XFX
+    - ASRock
+    - Inno3D
+    - KFA2
+    - Colorful
+
+motherboard:
+  # Разрешённые чипсеты по профилю — НЕ единая шкала "чем выше число, тем
+  # лучше" (сокеты AM4/AM5/LGA1700/LGA1851 не сравнимы между собой), поэтому
+  # это явные списки, а не порог. Чипсет берётся из specs["chipset"]
+  # (normalize.py уже извлекает его из строки "чипсет <вендор> <модель>" в
+  # описании источника). Позиции без распознанного чипсета правило не
+  # трогает — см. builder._evaluate_brand_rules, verdict "unrecognized".
+  #
+  # Известный нюанс реальных данных: Regard для части плат ASUS AM5-A620
+  # указывает чипсет как "A620A", а не "A620" — это разные строки и они
+  # НЕ считаются одним и тем же чипсетом (сопоставление точное, без
+  # эвристик эквивалентности); если это одно и то же — дописать "A620A"
+  # в нужные профили вручную.
+  chipsets_by_profile:
+    gaming: [B550, X570, B650, B650E, X670, B760, Z790, B860, Z890]
+    workstation: [X570, X670, X670E, Z790, Z890]
+    student: [A520, B450, B550, A620, H610, B760]
+    office: [A320, A520, B450, H510, H610]
+
+case:
+  whitelist:
+    - Deepcool
+    - Zalman
+    - Cougar
+    - Thermaltake
+    - Fractal Design
+    - Lian Li
+    - be quiet!
+    - Corsair
+    - NZXT
+    - Montech
+    - ID-COOLING
+    - Ardor Gaming
+    - MSI
+    - ASUS
+    - Aerocool
+    - Powercase
+    - GameMax
+    - Formula
+
+  # Было min_fans (мин. число вентиляторов) для gaming/workstation —
+  # заменено на whitelist выше. Regard не публикует число вентиляторов в
+  # описании корпуса вообще (проверено на живой выборке ~120 позиций — ни
+  # одного упоминания; в реальном каталоге 1733 из 1740 корпусов уходили
+  # в unrecognized), правило по факту ничего не фильтровало. Оставлено
+  # закомментированным — вернуться, если появится источник с этим полем.
+  # min_fans: 2
+  # min_fans_profiles: [gaming, workstation]

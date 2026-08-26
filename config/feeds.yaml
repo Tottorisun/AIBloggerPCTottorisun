@@ -1,0 +1,33 @@
+# Партнёрские товарные фиды (Admitad, ePN, ...). enabled: false и
+# feed_url: null по умолчанию — сеть не запрашивается, пока сюда не впишут
+# реальный URL. category_map переводит категорию/id категории ВНУТРИ
+# фида в наши восемь категорий (cpu/gpu/motherboard/ram/ssd/psu/case/cooler);
+# ключи слева — то, что стоит в <categoryId> (YML) или колонке category (CSV)
+# конкретного фида, их нужно заполнить по факту подключения, т.к. у разных
+# фидов разная нумерация/названия категорий.
+
+admitad:
+  enabled: false
+  feed_url: null      # напр. https://ad.admitad.com/... .xml
+  format: yml          # yml | csv
+  category_map: {}
+  csv_column_map:      # используется только при format: csv; переопределяет
+    title: title        # эти имена колонок под конкретный фид при необходимости
+    price: price
+    brand: brand
+    url: url
+    category: category
+    external_id: id
+
+epn:
+  enabled: false
+  feed_url: null
+  format: yml
+  category_map: {}
+  csv_column_map:
+    title: title
+    price: price
+    brand: brand
+    url: url
+    category: category
+    external_id: id

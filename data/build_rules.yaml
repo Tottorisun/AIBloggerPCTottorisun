@@ -1,0 +1,207 @@
+# Правила качества сборок по профилям. Три слоя, в порядке применения в
+# builder.py:
+#
+#   1. floors — жёсткие требования. Кандидат, не проходящий floor, вообще
+#      не участвует в подборе для этой категории, независимо от цены.
+#   2. budget_corridors — [min, max] доли ОБЩЕГО бюджета на категорию.
+#      Кандидат вне коридора своей категории не рассматривается.
+#   3. objective_weights — веса tier CPU/GPU в целевой функции. Из всех
+#      комбинаций CPU+GPU, прошедших floors и коридоры, выбирается та, что
+#      максимизирует cpu_weight*tier(cpu) + gpu_weight*tier(gpu).
+#
+# Категория, отсутствующая в budget_corridors/objective_weights профиля, в
+# сборку не включается (так у office нет дискретной видеокарты).
+#
+# Если для профиля/бюджета нет ни одной комбинации, проходящей все три
+# слоя, build честно сообщает, чего не хватает, и оценивает минимальный
+# бюджет — тихо выдавать первую попавшуюся совместимую, но плохую сборку
+# builder не должен.
+#
+# floors.min_cores / min_threads (cpu) — как min_fans/chipset в
+# brand_rules.yaml: если значение не извлеклось из данных источника,
+# кандидат не отбраковывается, а помечается unrecognized (см.
+# builder._apply_floors). cores извлекается надёжно (normalize.py,
+# "N-ядерный" в описании); threads источник не публикует вообще —
+# min_threads сейчас фактически не фильтрует ни одну позицию, это не баг.
+#
+# min_gpu_tier_ratio — нижняя граница tier видеокарты как доля от tier
+# САМОЙ СИЛЬНОЙ карты, вписывающейся в бюджетный коридор gpu (не
+# абсолютное число — пересчитывается на каждый прогон под то, что сейчас
+# реально доступно за эти деньги). Не даёт положить в сборку карту,
+# радикально слабее того, что позволяет бюджет. Категории без gpu в
+# budget_corridors (office) это не касается.
+#
+# floors.require_availability — список допустимых статусов доступности
+# (offer.availability, извлекается в sources/regard.py из show_flag/
+# preorder/price). Regard реально отдаёт ровно три статуса — проверено
+# 2026-08-21 на живых карточках (полный обход категорий cpu и gpu,
+# плюс точечная проверка карточек товара для каждого статуса):
+#   "в наличии"      — show_flag=1, не под предзаказ, есть цена
+#   "предзаказ"      — item["preorder"] непустой (это число дней, не
+#                       bool: любое ненулевое значение = предзаказ)
+#   "нет в наличии"  — show_flag=0 или нет цены
+# Никакого отдельного статуса "доставка из-за рубежа" у Regard нет — ни
+# в данных листинга, ни в i18n-строках фронтенда карточки товара. Если
+# ключ не задан в floors профиля, код по умолчанию использует
+# ["в наличии"] (см. builder._apply_floors) — здесь он прописан явно для
+# прозрачности. Позиции с availability=None (offer.availability не
+# извлёкся — например, старые записи в БД до этой правки, или источник
+# без детального статуса) НЕ отбраковываются, а помечаются unrecognized
+# и логируются — как чипсет в brand_rules.yaml. CLI-флаг --include-preorder
+# отключает этот floor целиком (а не просто добавляет "предзаказ" в
+# список) — для сравнения «со склада» против «вообще без фильтра».
+#
+# _defaults ниже — не профиль (build_configuration ищет профиль по имени
+# в rules, "_defaults" никогда не запрашивается), просто место для
+# YAML-якоря, чтобы не повторять один и тот же список литералом в каждом
+# профиле.
+_defaults:
+  availability: &default_availability ["в наличии"]
+
+gaming:
+  description: "Игровая сборка с упором на видеокарту"
+  floors:
+    ram_min_total_gb: 16
+    ram_min_modules: 2
+    ssd_min_gb: 500
+    ssd_require_nvme: true
+    psu_require_80plus: true
+    min_cores: 6
+    min_threads: 12
+    require_availability: *default_availability
+  # Raised from 0.6: the gpu corridor is necessarily wide (0.40-0.50, has
+  # to cover everything from a modest budget's GPU to a generous one's),
+  # which means at any single budget it can span a huge tier range too —
+  # e.g. at 150000, the 40-50% window holds both RX 9070 (tier 65) and
+  # RTX 5060 Ti (tier 47) at once. Below-corridor swaps aren't the only
+  # place that matters: the same ratio-filtered pool also bounds what a
+  # same-corridor rescue swap can fall back to when the initial pick
+  # slightly overshoots the budget (see 2026-08-20 calibration notes) —
+  # at 0.6, "cheaper within the gpu corridor" could mean a card 18 tier
+  # points weaker, which is a bigger single saving than any peripheral
+  # category can offer, so that's what a budget rescue always reached for
+  # first. 0.75 still comfortably passes every card actually worth having
+  # in the corridor (checked against real data across all four profile
+  # budgets) while closing that gap enough that peripherals are usually
+  # the cheaper lever again.
+  min_gpu_tier_ratio: 0.75
+  budget_corridors:
+    # Floor nudged down from 0.15: a rescue swap (see min_gpu_tier_ratio
+    # note above) always takes the single biggest available saving, not
+    # the smallest sufficient one — so when the only remaining lever was
+    # "below cpu corridor", it jumped straight past a much closer, much
+    # better option (Ryzen 7 7700X, tier 71 @ 14.8%) sitting just outside
+    # the old floor, landing on something far weaker than necessary purely
+    # because that near-miss wasn't a legal in-corridor pick yet.
+    cpu: [0.14, 0.22]
+    # Lower bound removed 2026-08-21: at high budgets it excluded genuinely
+    # better cards for being "too cheap" — e.g. at 250000, [0.40,0.50] means
+    # >=100000 RUB, which cuts out RX 9070 XT (tier 72, ~87500 RUB) and
+    # leaves RTX 5070 (tier 56, ~104000 RUB) as the only option in-window,
+    # so the algorithm paid MORE for LESS. Two guards on the same job is
+    # redundant and this one cut the wrong direction: min_gpu_tier_ratio
+    # (0.75) already rejects anything too weak relative to what the budget
+    # can reach, and the upper bound still caps overpaying for tier. A GPU
+    # being cheap is never itself a problem worth guarding against.
+    gpu: [0.0, 0.50]
+    # Ceiling brought down from 0.12: cheapest whitelisted-chipset AM5
+    # board is ~5.4% of a 150000 budget, and the old 12% ceiling let the
+    # greedy fill pick one nearly 2x that for no compatibility reason —
+    # money better spent on GPU tier given the 0.85 weight there.
+    motherboard: [0.0, 0.07]
+    # 0.06-0.12 (4800-9600 RUB at 80000) looked reasonable on paper but
+    # undershot the real market: with the floor now requiring a genuine
+    # 16GB dual-channel kit, the cheapest thing that isn't 15-year-old
+    # DDR3 currently starts around 13000 RUB. Widened to actually contain
+    # real floor-passing options instead of only the DDR3 leftovers.
+    ram: [0.10, 0.20]
+    ssd: [0.06, 0.12]
+    psu: [0.04, 0.10]
+    case: [0.0, 0.08]
+    cooler: [0.02, 0.07]
+  # GPU tier (6-100) and CPU tier (roughly 28-97 across what min_cores
+  # leaves standing) sit on very different scales — equal-ish weights let
+  # a rouble spent on CPU buy more raw score than the same rouble on GPU,
+  # so the objective quietly optimized for CPU tier over GPU tier despite
+  # gaming being GPU-bound. CPU here is a gate (min_cores already keeps it
+  # off anything too weak to matter) — GPU is what's actually maximized.
+  objective_weights:
+    cpu: 0.15
+    gpu: 0.85
+
+workstation:
+  description: "Рабочая станция: упор на CPU и объём памяти"
+  floors:
+    ram_min_total_gb: 32
+    ram_min_modules: 2
+    ssd_min_gb: 1024
+    ssd_require_nvme: true
+    psu_require_80plus: true
+    min_cores: 6
+    min_threads: 12
+    require_availability: *default_availability
+  min_gpu_tier_ratio: 0.5
+  budget_corridors:
+    cpu: [0.25, 0.35]
+    gpu: [0.12, 0.25]
+    motherboard: [0.05, 0.15]
+    # Same real-market correction as gaming's RAM corridor: the floor here
+    # requires 32GB dual-channel, and top-tier CPUs are AM5 (DDR5-only) —
+    # a real 32GB DDR5 kit currently starts around 45000 RUB (30% of
+    # 150000), well past the old 22% cap.
+    ram: [0.15, 0.32]
+    ssd: [0.08, 0.15]
+    psu: [0.03, 0.08]
+    case: [0.0, 0.05]
+    cooler: [0.02, 0.05]
+  objective_weights:
+    cpu: 0.70
+    gpu: 0.30  # unchanged: workstation is deliberately CPU-weighted already
+
+student:
+  description: "Бюджетная универсальная сборка"
+  floors:
+    ram_min_total_gb: 8
+    ram_min_modules: 1
+    ssd_min_gb: 250
+    ssd_require_nvme: false
+    psu_require_80plus: false
+    require_availability: *default_availability
+  min_gpu_tier_ratio: 0.6
+  budget_corridors:
+    cpu: [0.15, 0.28]
+    # Was 0.10-0.25 (5000-12500 RUB at 50000) — GT 1030 (tier 6) was
+    # passing min_gpu_tier_ratio not because the floor is weak but because
+    # nothing better exists for whitelisted brands in that price band (see
+    # 2026-08-20 calibration). Raised so the corridor actually reaches
+    # real current-gen budget cards.
+    gpu: [0.35, 0.48]
+    motherboard: [0.0, 0.14]
+    ram: [0.06, 0.14]
+    ssd: [0.06, 0.16]
+    psu: [0.04, 0.10]
+    case: [0.0, 0.12]
+    cooler: [0.02, 0.08]
+  objective_weights:
+    cpu: 0.25
+    gpu: 0.75
+
+office:
+  description: "Офисная сборка без дискретной видеокарты"
+  floors:
+    ram_min_total_gb: 8
+    ram_min_modules: 1
+    ssd_min_gb: 250
+    ssd_require_nvme: false
+    psu_require_80plus: false
+    require_availability: *default_availability
+  budget_corridors:
+    cpu: [0.20, 0.35]
+    motherboard: [0.05, 0.20]
+    ram: [0.08, 0.20]
+    ssd: [0.10, 0.25]
+    psu: [0.05, 0.12]
+    case: [0.0, 0.15]
+    cooler: [0.02, 0.10]
+  objective_weights:
+    cpu: 1.0

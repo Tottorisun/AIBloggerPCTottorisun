@@ -1,0 +1,102 @@
+{
+  "id": 682522,
+  "grpid": 7292,
+  "title": "32GB DDR5 6000MHz Kingston Fury Beast (KF560C30BBEK2-32) (2x16GB KIT)",
+  "price": 53990,
+  "price_old": null,
+  "show_flag": 1,
+  "vendor": "Kingston",
+  "vendor_id": 13,
+  "vendorcode": "KF560C30BBEK2-32",
+  "width": 133,
+  "height": 35,
+  "depth": 7,
+  "mass": 0.15,
+  "popular": 48,
+  "full_title": "Оперативная память 32GB DDR5 6000MHz Kingston Fury Beast (KF560C30BBEK2-32) (2x16GB KIT)",
+  "vendor_url": "",
+  "disable_delivery": 0,
+  "alternative_pn": null,
+  "max_day": 0,
+  "min_price": 0,
+  "min_price_our": 590,
+  "badges": [
+    {
+      "text": "Хит продаж",
+      "order": 2,
+      "background_color": "#eaf0f5",
+      "text_color": "#000000",
+      "background_color_darkmode": "#555D70",
+      "text_color_darkmode": "#FFFFFF",
+      "title": "Хит продаж",
+      "type": "hit",
+      "hide": 0,
+      "promotion_type": null
+    }
+  ],
+  "photo": "/6128648",
+  "photos": {
+    "urls": [
+      "/6128648",
+      "/6128649",
+      "/6128650",
+      "/6128651"
+    ]
+  },
+  "brief": "32 ГБ, 2 модуля DDR5, 48000 МБ/с, CL30, 1.4 В, EXPO, XMP профиль, радиатор",
+  "reviews_count": 32,
+  "reviews_stars": 4.7,
+  "modifications": {
+    "byChar": [
+      {
+        "id": 682519,
+        "title": "16GB DDR5 6000MHz Kingston Fury Beast (KF560C30BBEK2-16) (2x8GB KIT)",
+        "full_title": "Оперативная память 16GB DDR5 6000MHz Kingston Fury Beast (KF560C30BBEK2-16) (2x8GB KIT)",
+        "price": 28810,
+        "price_old": null,
+        "brief": "16 ГБ, 2 модуля DDR5, 48000 МБ/с, CL30, 1.4 В, EXPO, XMP профиль, радиатор",
+        "photos": [
+          {
+            "name": 6128640
+          }
+        ],
+        "show_flag": 1,
+        "admin_link": "",
+        "seo_url": "operativnaia-pamiat-16gb-ddr5-6000mhz-kingston-fury-beast-kf560c30bbek2-16-2x8gb-kit",
+        "badges": [
+          {
+            "text": "Хит продаж",
+            "order": 2,
+            "background_color": "#eaf0f5",
+            "text_color": "#000000",
+            "background_color_darkmode": "#555D70",
+            "text_color_darkmode": "#FFFFFF",
+            "title": "Хит продаж",
+            "type": "hit",
+            "hide": 0,
+            "promotion_type": null
+          }
+        ]
+      }
+    ],
+    "byIds": [
+      682519
+    ],
+    "min_price": 28810
+  },
+  "seo_url": "operativnaia-pamiat-32gb-ddr5-6000mhz-kingston-fury-beast-kf560c30bbek2-32-2x16gb-kit",
+  "category_id_char": 1010,
+  "extra_title": [
+    0,
+    0,
+    0
+  ],
+  "cfg_only": false,
+  "admin_link": "",
+  "preorder": 0,
+  "postscript": "Оперативная память Kingston Fury Beast (KF560C30BBEK2-32) представляет собой надежное и мощное решение для повышения производительности вашего компьютера. С объемом 32 Гб и тактовой частотой 6000 МГц, эта память обеспечивает быструю и эффективную работу вашей системы.<br />\n<br />\nЭтот набор включает два модуля по 16 Гб каждый, что позволяет использовать двухканальный режим работы для улучшения производительности и увеличения пропускной способности. Благодаря высокой частоте памяти и низким задержкам (CAS Latency 30, RAS to CAS Delay 36, Row Precharge Delay 36), Kingston Fury Beast обеспечивает быструю передачу данных и плавную работу системы.<br />\n<br />\nФорм-фактор DIMM обеспечивает простоту установки памяти на материнскую плату, а пассивная система охлаждения с радиаторами помогает поддерживать оптимальную температуру модулей памяти во время работы. Это обеспечивает стабильную и надежную работу системы даже при интенсивной нагрузке.<br />\n<br />\nKingston Fury Beast 32Gb DDR5 6000MHz идеально подходит для геймеров, видеомонтажеров, программистов и других пользователей, нуждающихся в высокой производительности и надежности памяти. Наслаждайтесь быстрым доступом к данным, плавным запуском приложений и отзывчивой работой вашего компьютера с этим надежным и мощным набором оперативной памяти от Kingston.",
+  "discounted_price": null,
+  "similar": null,
+  "bonus": 270,
+  "seo_urls_by_locale": []
+}

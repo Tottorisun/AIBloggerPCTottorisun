@@ -1,0 +1,170 @@
+{
+  "id": 765570,
+  "grpid": 11047,
+  "title": "Zalman I3 Neo V2 Black",
+  "price": 4910,
+  "price_old": null,
+  "show_flag": 1,
+  "vendor": "Zalman",
+  "vendor_id": 4,
+  "vendorcode": "i3 NEO V2 Black",
+  "width": 219,
+  "height": 484,
+  "depth": 476,
+  "mass": 6.7,
+  "popular": 53,
+  "full_title": "Корпус Zalman I3 Neo V2 Black",
+  "vendor_url": "https://www.zalman.com/RU/Product/ProductDetail.do?pageIndex=1&pageSize=10&pageUnit=12&productSeq=1716&searchCategory1=5&searchCategory2=-99&searchCategory3=-99&searchKey=&searchWord=",
+  "disable_delivery": 0,
+  "alternative_pn": [
+    "I3 NEO ARGB V2 BLACK",
+    "I3 NEO V2 Black_1",
+    "i3 NEO V2  Black"
+  ],
+  "max_day": 0,
+  "min_price": 0,
+  "min_price_our": 590,
+  "badges": [
+    {
+      "text": "Хит продаж",
+      "order": 2,
+      "background_color": "#eaf0f5",
+      "text_color": "#000000",
+      "background_color_darkmode": "#555D70",
+      "text_color_darkmode": "#FFFFFF",
+      "title": "Хит продаж",
+      "type": "hit",
+      "hide": 0,
+      "promotion_type": null
+    }
+  ],
+  "photo": "/6486375",
+  "photos": {
+    "urls": [
+      "/6486375",
+      "/6486376",
+      "/6486377",
+      "/6486378",
+      "/6486379",
+      "/6486380"
+    ]
+  },
+  "brief": "корпус Midi-Tower, поддержка плат ATX, mATX, Mini-ITX, без БП, с окном, длина видеокарты до 400 мм, высота кулера до 160 <noindex>мм</noindex>, подсветка, USB 3.0, USB Type-C",
+  "reviews_count": 0,
+  "reviews_stars": 0,
+  "modifications": {
+    "byChar": [
+      {
+        "id": 765573,
+        "title": "Zalman I3 Neo ARGB V2 White",
+        "full_title": "Корпус Zalman I3 Neo ARGB V2 White",
+        "price": 5650,
+        "price_old": null,
+        "brief": "корпус Midi-Tower, поддержка плат ATX, mATX, Mini-ITX, без БП, с окном, длина видеокарты до 400 мм, высота кулера до 160 <noindex>мм</noindex>, подсветка, USB 3.0, USB Type-C",
+        "photos": [
+          {
+            "name": 6486399
+          }
+        ],
+        "show_flag": 1,
+        "admin_link": "",
+        "seo_url": "korpus-zalman-i3-neo-argb-v2-white",
+        "badges": [
+          {
+            "text": "Хит продаж",
+            "order": 2,
+            "background_color": "#eaf0f5",
+            "text_color": "#000000",
+            "background_color_darkmode": "#555D70",
+            "text_color_darkmode": "#FFFFFF",
+            "title": "Хит продаж",
+            "type": "hit",
+            "hide": 0,
+            "promotion_type": null
+          }
+        ]
+      },
+      {
+        "id": 765572,
+        "title": "Zalman I3 Neo ARGB V2 Black",
+        "full_title": "Корпус Zalman I3 Neo ARGB V2 Black",
+        "price": 5770,
+        "price_old": null,
+        "brief": "корпус Midi-Tower, поддержка плат ATX, mATX, Mini-ITX, без БП, с окном, длина видеокарты до 400 мм, высота кулера до 160 <noindex>мм</noindex>, подсветка, USB 3.0, USB Type-C",
+        "photos": [
+          {
+            "name": 6486393
+          }
+        ],
+        "show_flag": 1,
+        "admin_link": "",
+        "seo_url": "korpus-zalman-i3-neo-argb-v2-black",
+        "badges": [
+          {
+            "text": "Хит продаж",
+            "order": 2,
+            "background_color": "#eaf0f5",
+            "text_color": "#000000",
+            "background_color_darkmode": "#555D70",
+            "text_color_darkmode": "#FFFFFF",
+            "title": "Хит продаж",
+            "type": "hit",
+            "hide": 0,
+            "promotion_type": null
+          }
+        ]
+      },
+      {
+        "id": 765571,
+        "title": "Zalman I3 Neo V2 White",
+        "full_title": "Корпус Zalman I3 Neo V2 White",
+        "price": 5850,
+        "price_old": null,
+        "brief": "корпус Midi-Tower, поддержка плат ATX, mATX, Mini-ITX, без БП, с окном, длина видеокарты до 400 мм, высота кулера до 160 <noindex>мм</noindex>, подсветка, USB 3.0, USB Type-C",
+        "photos": [
+          {
+            "name": 6486387
+          }
+        ],
+        "show_flag": 1,
+        "admin_link": "",
+        "seo_url": "korpus-zalman-i3-neo-v2-white",
+        "badges": [
+          {
+            "text": "Хит продаж",
+            "order": 2,
+            "background_color": "#eaf0f5",
+            "text_color": "#000000",
+            "background_color_darkmode": "#555D70",
+            "text_color_darkmode": "#FFFFFF",
+            "title": "Хит продаж",
+            "type": "hit",
+            "hide": 0,
+            "promotion_type": null
+          }
+        ]
+      }
+    ],
+    "byIds": [
+      765571,
+      765572,
+      765573
+    ],
+    "min_price": 5650
+  },
+  "seo_url": "korpus-zalman-i3-neo-v2-black",
+  "category_id_char": 1032,
+  "extra_title": [
+    0,
+    0,
+    0
+  ],
+  "cfg_only": false,
+  "admin_link": "",
+  "preorder": 0,
+  "postscript": "Представляем корпус Zalman I3 Neo V2 Black — гармоничное сочетание современного дизайна, продуманной конструкции и эффективного охлаждения для создания вашей идеальной системы. Этот корпус формата Midi-Tower станет надёжным фундаментом для сборки на базе материнских плат ATX, microATX или Mini-ITX, предлагая при этом впечатляющую гибкость и эстетику.<br />\n<br />\nВнешний вид корпуса сразу привлекает внимание стильной лицевой панелью с перфорацией, которая не только выглядит современно, но и обеспечивает отличный приток воздуха. Главным украшением служит боковая панель из закалённого стекла, позволяющая в полной мере продемонстрировать внутренние компоненты и их подсветку. А встроенная фиксированная RGB-подсветка сразу создаёт яркий акцент, оживляя образ системы без необходимости установки дополнительных аксессуаров.<br />\n<br />\nВнутренняя компоновка продумана до мелочей. Нижнее расположение блока питания стандарта ATX способствует оптимальному распределению тепла и улучшенной циркуляции воздуха внутри корпуса. Для установки комплектующих предусмотрены широкие возможности: вы сможете разместить видеокарту длиной до 400 миллиметров и процессорный кулер высотой до 160 миллиметров. Особого внимания заслуживает система хранения данных: два конвертируемых отсека для накопителей формата 3.5 или 2.5 дюйма с поперечным размещением и один дополнительный слот 2.5 дюйма, поддерживающий вертикальное крепление, обеспечивают удобный и аккуратный монтаж.<br />\n<br />\nЭффективному охлаждению в корпусе уделено первостепенное внимание. В комплекте уже есть вентилятор на задней панели размером 120 миллиметров, а общий потенциал системы вентиляции огромен. На переднюю панель можно установить до трёх вентиляторов 120 миллиметров, на верхнюю — два 140-миллиметровых или три 120-миллиметровых, на боковую панель — два 120-миллиметровых, а в отсек блока питания — ещё два 120-миллиметровых. Кроме того, корпус полностью готов к монтажу систем жидкостного охлаждения: на переднюю и верхнюю панели можно установить радиаторы размером до 360 миллиметров, а на заднюю — 120 миллиметров.",
+  "discounted_price": null,
+  "similar": null,
+  "bonus": 25,
+  "seo_urls_by_locale": []
+}

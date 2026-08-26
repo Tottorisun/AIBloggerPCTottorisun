@@ -1,0 +1,469 @@
+# Справочник условной производительности CPU/GPU, шкала 1-100.
+#
+# ОБНОВЛЯЕТСЯ ВРУЧНУЮ, ориентировочно раз в квартал — не пересчитывается
+# автоматически при каждом scrape. Значения — экспертная оценка по
+# известному соотношению поколений и уровней в линейке (не результат
+# конкретного бенчмарка): 5060 выше 3050, 7800X3D выше 5600X и т.п.
+# Для GPU скорость привязана к чипу, а не к конкретной AIB-плате —
+# разные партнёрские версии одной RTX 5070 Ti получают один tier.
+#
+# source: estimated — проставлено по общей логике поколений/уровней,
+#         не сверялось с внешними данными.
+#         verified — сверено вручную с реальными бенчмарками/обзорами;
+#         проставляется человеком, скрипт этого не делает и не трогает
+#         уже выставленные verified-записи при перегенерации.
+#
+# Позиции без tier (новая модель, которую ещё не оценили руками) не
+# участвуют в сборке build — попадают в лог, а не выбираются вслепую.
+#
+# Невалидированные записи, отсортированные по частоте появления в
+# базе (что стоит сверить в первую очередь):
+#   python -m pc_price_tracker.cli tiers --unverified --top 40
+#
+# Пересобрать (добавляет только новые normalized_key, не трогает
+# существующие записи):
+#   python scripts/generate_performance_tiers.py
+
+cpu:amd:a6-7480-oem: {tier: 3, source: estimated}  # AMD A6-7480 OEM
+cpu:amd:athlon-3000g-oem: {tier: 8, source: estimated}  # AMD Athlon 3000G OEM
+cpu:amd:athlon-pro-300ge-oem: {tier: 8, source: estimated}  # AMD Athlon PRO 300GE OEM
+cpu:intel:celeron-g5905-oem: {tier: 10, source: estimated}  # Intel Celeron G5905 OEM
+cpu:intel:celeron-g6900-oem: {tier: 13, source: estimated}  # Intel Celeron G6900 OEM
+cpu:intel:core-ultra-5-225-oem: {tier: 52, source: estimated}  # Intel Core Ultra 5 225 OEM
+cpu:intel:core-ultra-5-225f-oem: {tier: 52, source: estimated}  # Intel Core Ultra 5 225F OEM
+cpu:intel:core-ultra-5-235-oem: {tier: 56, source: estimated}  # Intel Core Ultra 5 235 OEM
+cpu:intel:core-ultra-5-245k-oem: {tier: 66, source: estimated}  # Intel Core Ultra 5 245K OEM
+cpu:intel:core-ultra-5-245kf-oem: {tier: 66, source: estimated}  # Intel Core Ultra 5 245KF OEM
+cpu:intel:core-ultra-5-250k-plus-oem: {tier: 68, source: estimated}  # Intel Core Ultra 5 250K Plus OEM
+cpu:intel:core-ultra-5-250kf-plus-oem: {tier: 68, source: estimated}  # Intel Core Ultra 5 250KF Plus OEM
+cpu:intel:core-ultra-7-265-oem: {tier: 78, source: estimated}  # Intel Core Ultra 7 265 OEM
+cpu:intel:core-ultra-7-265k-oem: {tier: 78, source: estimated}  # Intel Core Ultra 7 265K OEM
+cpu:intel:core-ultra-7-265kf-box-без-кулера: {tier: 78, source: estimated}  # Intel Core Ultra 7 265KF BOX без кулера
+cpu:intel:core-ultra-7-265kf-oem: {tier: 78, source: estimated}  # Intel Core Ultra 7 265KF OEM
+cpu:intel:core-ultra-7-270k-plus-oem: {tier: 82, source: estimated}  # Intel Core Ultra 7 270K Plus OEM
+cpu:intel:core-ultra-9-285-oem: {tier: 90, source: estimated}  # Intel Core Ultra 9 285 OEM
+cpu:intel:core-ultra-9-285k-oem: {tier: 90, source: estimated}  # Intel Core Ultra 9 285K OEM
+cpu:intel:core-i3-10100-oem: {tier: 24, source: estimated}  # Intel Core i3 - 10100 OEM
+cpu:intel:core-i3-10100f-oem: {tier: 24, source: estimated}  # Intel Core i3 - 10100F OEM
+cpu:intel:core-i3-10105-oem: {tier: 25, source: estimated}  # Intel Core i3 - 10105 OEM
+cpu:intel:core-i3-10105f-oem: {tier: 25, source: estimated}  # Intel Core i3 - 10105F OEM
+cpu:intel:core-i3-12100-oem: {tier: 33, source: estimated}  # Intel Core i3 - 12100 OEM
+cpu:intel:core-i3-12100f-oem: {tier: 33, source: estimated}  # Intel Core i3 - 12100F OEM
+cpu:intel:core-i3-13100-oem: {tier: 35, source: estimated}  # Intel Core i3 - 13100 OEM
+cpu:intel:core-i3-13100f-oem: {tier: 35, source: estimated}  # Intel Core i3 - 13100F OEM
+cpu:intel:core-i3-14100-oem: {tier: 36, source: estimated}  # Intel Core i3 - 14100 OEM
+cpu:intel:core-i3-14100f-oem: {tier: 36, source: estimated}  # Intel Core i3 - 14100F OEM
+cpu:intel:core-i5-10400-oem: {tier: 30, source: estimated}  # Intel Core i5 - 10400 OEM
+cpu:intel:core-i5-10400f-oem: {tier: 30, source: estimated}  # Intel Core i5 - 10400F OEM
+cpu:intel:core-i5-10500-oem: {tier: 32, source: estimated}  # Intel Core i5 - 10500 OEM
+cpu:intel:core-i5-10600k-oem: {tier: 35, source: estimated}  # Intel Core i5 - 10600K OEM
+cpu:intel:core-i5-11400-oem: {tier: 37, source: estimated}  # Intel Core i5 - 11400 OEM
+cpu:intel:core-i5-11400f-oem: {tier: 37, source: estimated}  # Intel Core i5 - 11400F OEM
+cpu:intel:core-i5-12400-oem: {tier: 45, source: estimated}  # Intel Core i5 - 12400 OEM
+cpu:intel:core-i5-12400f-oem: {tier: 45, source: estimated}  # Intel Core i5 - 12400F OEM
+cpu:intel:core-i5-12500-oem: {tier: 47, source: estimated}  # Intel Core i5 - 12500 OEM
+cpu:intel:core-i5-12600k-oem: {tier: 55, source: estimated}  # Intel Core i5 - 12600K OEM
+cpu:intel:core-i5-12600kf-oem: {tier: 55, source: estimated}  # Intel Core i5 - 12600KF OEM
+cpu:intel:core-i5-13400-oem: {tier: 48, source: estimated}  # Intel Core i5 - 13400 OEM
+cpu:intel:core-i5-13400f-oem: {tier: 48, source: estimated}  # Intel Core i5 - 13400F OEM
+cpu:intel:core-i5-13500-oem: {tier: 52, source: estimated}  # Intel Core i5 - 13500 OEM
+cpu:intel:core-i5-13600kf-oem: {tier: 62, source: estimated}  # Intel Core i5 - 13600KF OEM
+cpu:intel:core-i5-14400-oem: {tier: 50, source: estimated}  # Intel Core i5 - 14400 OEM
+cpu:intel:core-i5-14400f-oem: {tier: 50, source: estimated}  # Intel Core i5 - 14400F OEM
+cpu:intel:core-i5-14500-oem: {tier: 54, source: estimated}  # Intel Core i5 - 14500 OEM
+cpu:intel:core-i5-14600k-oem: {tier: 64, source: estimated}  # Intel Core i5 - 14600K OEM
+cpu:intel:core-i5-14600kf-oem: {tier: 64, source: estimated}  # Intel Core i5 - 14600KF OEM
+cpu:intel:core-i7-12700-oem: {tier: 62, source: estimated}  # Intel Core i7 - 12700 OEM
+cpu:intel:core-i7-12700f-oem: {tier: 62, source: estimated}  # Intel Core i7 - 12700F OEM
+cpu:intel:core-i7-12700k-oem: {tier: 68, source: estimated}  # Intel Core i7 - 12700K OEM
+cpu:intel:core-i7-12700kf-oem: {tier: 68, source: estimated}  # Intel Core i7 - 12700KF OEM
+cpu:intel:core-i7-13700f-oem: {tier: 72, source: estimated}  # Intel Core i7 - 13700F OEM
+cpu:intel:core-i7-13700k-oem: {tier: 76, source: estimated}  # Intel Core i7 - 13700K OEM
+cpu:intel:core-i7-13700kf-oem: {tier: 76, source: estimated}  # Intel Core i7 - 13700KF OEM
+cpu:intel:core-i7-14700-oem: {tier: 74, source: estimated}  # Intel Core i7 - 14700 OEM
+cpu:intel:core-i7-14700f-oem: {tier: 74, source: estimated}  # Intel Core i7 - 14700F OEM
+cpu:intel:core-i7-14700k-oem: {tier: 79, source: estimated}  # Intel Core i7 - 14700K OEM
+cpu:intel:core-i7-14700kf-oem: {tier: 79, source: estimated}  # Intel Core i7 - 14700KF OEM
+cpu:intel:core-i7-6700-oem: {tier: 28, source: estimated}  # Intel Core i7 - 6700 OEM
+cpu:intel:core-i7-9700-oem: {tier: 42, source: estimated}  # Intel Core i7 - 9700 OEM
+cpu:intel:core-i9-10900x-oem: {tier: 48, source: estimated}  # Intel Core i9 - 10900X OEM
+cpu:intel:core-i9-10920x-oem: {tier: 50, source: estimated}  # Intel Core i9 - 10920X OEM
+cpu:intel:core-i9-10940x-oem: {tier: 52, source: estimated}  # Intel Core i9 - 10940X OEM
+cpu:intel:core-i9-12900k-oem: {tier: 78, source: estimated}  # Intel Core i9 - 12900K OEM
+cpu:intel:core-i9-12900kf-oem: {tier: 78, source: estimated}  # Intel Core i9 - 12900KF OEM
+cpu:intel:core-i9-13900-oem: {tier: 84, source: estimated}  # Intel Core i9 - 13900 OEM
+cpu:intel:core-i9-13900f-oem: {tier: 84, source: estimated}  # Intel Core i9 - 13900F OEM
+cpu:intel:core-i9-13900k-oem: {tier: 90, source: estimated}  # Intel Core i9 - 13900K OEM
+cpu:intel:core-i9-13900kf-oem: {tier: 90, source: estimated}  # Intel Core i9 - 13900KF OEM
+cpu:intel:core-i9-13900ks-oem: {tier: 92, source: estimated}  # Intel Core i9 - 13900KS OEM
+cpu:intel:core-i9-14900-oem: {tier: 85, source: estimated}  # Intel Core i9 - 14900 OEM
+cpu:intel:core-i9-14900k-oem: {tier: 91, source: estimated}  # Intel Core i9 - 14900K OEM
+cpu:intel:core-i9-14900kf-oem: {tier: 91, source: estimated}  # Intel Core i9 - 14900KF OEM
+cpu:intel:core-i9-14900ks-oem: {tier: 93, source: estimated}  # Intel Core i9 - 14900KS OEM
+cpu:intel:pentium-g4400-oem: {tier: 7, source: estimated}  # Intel Pentium G4400 OEM
+cpu:intel:pentium-g4560-oem: {tier: 10, source: estimated}  # Intel Pentium G4560 OEM
+cpu:intel:pentium-gold-g6400-oem: {tier: 14, source: estimated}  # Intel Pentium Gold G6400 OEM
+cpu:intel:pentium-gold-g6405-oem: {tier: 14, source: estimated}  # Intel Pentium Gold G6405 OEM
+cpu:intel:pentium-gold-g7400-oem: {tier: 17, source: estimated}  # Intel Pentium Gold G7400 OEM
+cpu:amd:ryzen-3-3200g-oem: {tier: 18, source: estimated}  # AMD Ryzen 3 3200G OEM
+cpu:amd:ryzen-3-4300g-oem: {tier: 22, source: estimated}  # AMD Ryzen 3 4300G OEM
+cpu:amd:ryzen-3-pro-4350g-oem: {tier: 23, source: estimated}  # AMD Ryzen 3 PRO 4350G OEM
+cpu:amd:ryzen-3-pro-5350g-oem: {tier: 25, source: estimated}  # AMD Ryzen 3 PRO 5350G OEM
+cpu:amd:ryzen-3-pro-5350ge-oem: {tier: 24, source: estimated}  # AMD Ryzen 3 PRO 5350GE OEM
+cpu:amd:ryzen-5-3400g-oem: {tier: 21, source: estimated}  # AMD Ryzen 5 3400G OEM
+cpu:amd:ryzen-5-3500x-oem: {tier: 28, source: estimated}  # AMD Ryzen 5 3500X OEM
+cpu:amd:ryzen-5-4500-oem: {tier: 34, source: estimated}  # AMD Ryzen 5 4500 OEM
+cpu:amd:ryzen-5-5500-oem: {tier: 38, source: estimated}  # AMD Ryzen 5 5500 OEM
+cpu:amd:ryzen-5-5500gt-oem: {tier: 39, source: estimated}  # AMD Ryzen 5 5500GT OEM
+cpu:amd:ryzen-5-5500x3d-oem: {tier: 44, source: estimated}  # AMD Ryzen 5 5500X3D OEM
+cpu:amd:ryzen-5-5600-oem: {tier: 47, source: estimated}  # AMD Ryzen 5 5600 OEM
+cpu:amd:ryzen-5-5600-xt-oem: {tier: 48, source: estimated}  # AMD Ryzen 5 5600 XT OEM
+cpu:amd:ryzen-5-5600gt-oem: {tier: 46, source: estimated}  # AMD Ryzen 5 5600GT OEM
+cpu:amd:ryzen-5-5600x-box: {tier: 50, source: estimated}  # AMD Ryzen 5 5600X BOX
+cpu:amd:ryzen-5-5600x-oem: {tier: 50, source: estimated}  # AMD Ryzen 5 5600X OEM
+cpu:amd:ryzen-5-7400f-oem: {tier: 52, source: estimated}  # AMD Ryzen 5 7400F OEM
+cpu:amd:ryzen-5-7500f-oem: {tier: 55, source: estimated}  # AMD Ryzen 5 7500F OEM
+cpu:amd:ryzen-5-7500x3d-oem: {tier: 60, source: estimated}  # AMD Ryzen 5 7500X3D OEM
+cpu:amd:ryzen-5-7600-oem: {tier: 58, source: estimated}  # AMD Ryzen 5 7600 OEM
+cpu:amd:ryzen-5-7600x-oem: {tier: 61, source: estimated}  # AMD Ryzen 5 7600X OEM
+cpu:amd:ryzen-5-8400f-oem: {tier: 50, source: estimated}  # AMD Ryzen 5 8400F OEM
+cpu:amd:ryzen-5-8500g-oem: {tier: 47, source: estimated}  # AMD Ryzen 5 8500G OEM
+cpu:amd:ryzen-5-8600g-oem: {tier: 52, source: estimated}  # AMD Ryzen 5 8600G OEM
+cpu:amd:ryzen-5-9500f-oem: {tier: 60, source: estimated}  # AMD Ryzen 5 9500F OEM
+cpu:amd:ryzen-5-9600x-oem: {tier: 65, source: estimated}  # AMD Ryzen 5 9600X OEM
+cpu:amd:ryzen-5-pro-5650g-oem: {tier: 45, source: estimated}  # AMD Ryzen 5 PRO 5650G OEM
+cpu:amd:ryzen-5-pro-5655g-oem: {tier: 46, source: estimated}  # AMD Ryzen 5 PRO 5655G OEM
+cpu:amd:ryzen-5-pro-8500g-oem: {tier: 48, source: estimated}  # AMD Ryzen 5 PRO 8500G OEM
+cpu:amd:ryzen-5-pro-8600g-oem: {tier: 52, source: estimated}  # AMD Ryzen 5 PRO 8600G OEM
+cpu:amd:ryzen-7-5700-oem: {tier: 53, source: estimated}  # AMD Ryzen 7 5700 OEM
+cpu:amd:ryzen-7-5700g-oem: {tier: 48, source: estimated}  # AMD Ryzen 7 5700G OEM
+cpu:amd:ryzen-7-5700x-oem: {tier: 55, source: estimated}  # AMD Ryzen 7 5700X OEM
+cpu:amd:ryzen-7-5800x-box-без-кулера: {tier: 58, source: estimated}  # AMD Ryzen 7 5800X BOX без кулера
+cpu:amd:ryzen-7-5800x-oem: {tier: 58, source: estimated}  # AMD Ryzen 7 5800X OEM
+cpu:amd:ryzen-7-7700-oem: {tier: 68, source: estimated}  # AMD Ryzen 7 7700 OEM
+cpu:amd:ryzen-7-7700x-oem: {tier: 71, source: estimated}  # AMD Ryzen 7 7700X OEM
+cpu:amd:ryzen-7-7800x3d-oem: {tier: 82, source: estimated}  # AMD Ryzen 7 7800X3D OEM
+cpu:amd:ryzen-7-8700f-oem: {tier: 66, source: estimated}  # AMD Ryzen 7 8700F OEM
+cpu:amd:ryzen-7-8700g-oem: {tier: 65, source: estimated}  # AMD Ryzen 7 8700G OEM
+cpu:amd:ryzen-7-9700x-oem: {tier: 76, source: estimated}  # AMD Ryzen 7 9700X OEM
+cpu:amd:ryzen-7-9800x3d-oem: {tier: 91, source: estimated}  # AMD Ryzen 7 9800X3D OEM
+cpu:amd:ryzen-7-9850x3d-oem: {tier: 92, source: estimated}  # AMD Ryzen 7 9850X3D OEM
+cpu:amd:ryzen-7-pro-5755g-oem: {tier: 50, source: estimated}  # AMD Ryzen 7 PRO 5755G OEM
+cpu:amd:ryzen-9-5900x-oem: {tier: 68, source: estimated}  # AMD Ryzen 9 5900X OEM
+cpu:amd:ryzen-9-5950x-oem: {tier: 74, source: estimated}  # AMD Ryzen 9 5950X OEM
+cpu:amd:ryzen-9-7900x-oem: {tier: 80, source: estimated}  # AMD Ryzen 9 7900X OEM
+cpu:amd:ryzen-9-7950x3d-oem: {tier: 90, source: estimated}  # AMD Ryzen 9 7950X3D OEM
+cpu:amd:ryzen-9-9900x-oem: {tier: 84, source: estimated}  # AMD Ryzen 9 9900X OEM
+cpu:amd:ryzen-9-9900x3d-oem: {tier: 89, source: estimated}  # AMD Ryzen 9 9900X3D OEM
+cpu:amd:ryzen-9-9950x-oem: {tier: 94, source: estimated}  # AMD Ryzen 9 9950X OEM
+cpu:amd:ryzen-9-9950x3d-oem: {tier: 97, source: estimated}  # AMD Ryzen 9 9950X3D OEM
+cpu:amd:ryzen-9-9950x3d2-dual-edition-oem: {tier: 98, source: estimated}  # AMD Ryzen 9 9950X3D2 Dual Edition OEM
+gpu:cbr:210-1gb: {tier: 1, source: estimated}  # CBR 210 1GB
+gpu:afox:210-1gb: {tier: 1, source: estimated}  # AFOX 210 1GB
+gpu:msi:210-1gb: {tier: 1, source: estimated}  # MSI 210 1GB
+gpu:afox:210-512mb: {tier: 1, source: estimated}  # AFOX 210 512MB
+gpu:gigabyte:arc-a310-4gb: {tier: 8, source: estimated}  # Gigabyte Arc A310 4GB
+gpu:gigabyte:arc-a380-6gb: {tier: 13, source: estimated}  # Gigabyte Arc A380 6GB
+gpu:gigabyte:arc-a380-6gb-gv-ia380gaming-oc-6gd: {tier: 13, source: estimated}  # Gigabyte Arc A380 6GB GV-IA380GAMING OC-6GD
+gpu:amd:firepro-s400-256mb: {tier: 3, source: estimated}  # AMD FirePro S400 256MB
+gpu:cbr:gt-1030-2gb: {tier: 6, source: estimated}  # CBR GT 1030 2GB
+gpu:asus:gt-1030-2gb: {tier: 6, source: estimated}  # ASUS GT 1030 2GB
+gpu:afox:gt-1030-2gb: {tier: 6, source: estimated}  # AFOX GT 1030 2GB
+gpu:gigabyte:gt-1030-2gb: {tier: 6, source: estimated}  # Gigabyte GT 1030 2GB
+gpu:zotac:gt-1030-2gb: {tier: 6, source: estimated}  # Zotac GT 1030 2GB
+gpu:msi:gt-1030-2gb-gt-1030-aero-itx-2gd4-oc: {tier: 6, source: estimated}  # MSI GT 1030 2GB GT 1030 AERO ITX 2GD4 OC
+gpu:afox:gt-1030-4gb: {tier: 6, source: estimated}  # AFOX GT 1030 4GB
+gpu:biostar:gt-1030-4gb: {tier: 6, source: estimated}  # Biostar GT 1030 4GB
+gpu:msi:gt-1030-4gb-gt-1030-aero-itx-4gd4-oc: {tier: 6, source: estimated}  # MSI GT 1030 4GB GT 1030 AERO ITX 4GD4 OC
+gpu:msi:gt-1030-oc-4gb-gt-1030-4gd4-lp-oc: {tier: 6, source: estimated}  # MSI GT 1030 OC 4GB GT 1030 4GD4 LP OC
+gpu:afox:gt-220-1gb: {tier: 1, source: estimated}  # AFOX GT 220 1GB
+gpu:afox:gt-240-1gb: {tier: 3, source: estimated}  # AFOX GT 240 1GB
+gpu:afox:gt-420-1gb: {tier: 3, source: estimated}  # AFOX GT 420 1GB
+gpu:afox:gt-420-2gb: {tier: 3, source: estimated}  # AFOX GT 420 2GB
+gpu:afox:gt-420-4gb: {tier: 3, source: estimated}  # AFOX GT 420 4GB
+gpu:afox:gt-610-1gb: {tier: 2, source: estimated}  # AFOX GT 610 1GB
+gpu:cbr:gt-610-2gb: {tier: 2, source: estimated}  # CBR GT 610 2GB
+gpu:afox:gt-610-2gb: {tier: 2, source: estimated}  # AFOX GT 610 2GB
+gpu:afox:gt-710-1gb: {tier: 2, source: estimated}  # AFOX GT 710 1GB
+gpu:gigabyte:gt-710-2gb: {tier: 2, source: estimated}  # Gigabyte GT 710 2GB
+gpu:colorful:gt-710-2gb: {tier: 2, source: estimated}  # Colorful GT 710 2GB
+gpu:afox:gt-710-2gb: {tier: 2, source: estimated}  # AFOX GT 710 2GB
+gpu:asus:gt-710-2gb: {tier: 2, source: estimated}  # ASUS GT 710 2GB
+gpu:biostar:gt-710-2gb: {tier: 2, source: estimated}  # Biostar GT 710 2GB
+gpu:cbr:gt-710-2gb: {tier: 2, source: estimated}  # CBR GT 710 2GB
+gpu:msi:gt-710-2gb-gt-710-2gd3h-lp: {tier: 2, source: estimated}  # MSI GT 710 2GB GT 710 2GD3H LP
+gpu:afox:gt-710-4gb: {tier: 2, source: estimated}  # AFOX GT 710 4GB
+gpu:afox:gt-730-1gb: {tier: 4, source: estimated}  # AFOX GT 730 1GB
+gpu:asus:gt-730-2gb: {tier: 4, source: estimated}  # ASUS GT 730 2GB
+gpu:afox:gt-730-2gb: {tier: 4, source: estimated}  # AFOX GT 730 2GB
+gpu:biostar:gt-730-2gb: {tier: 4, source: estimated}  # Biostar GT 730 2GB
+gpu:cbr:gt-730-2gb: {tier: 4, source: estimated}  # CBR GT 730 2GB
+gpu:msi:gt-730-2gb: {tier: 4, source: estimated}  # MSI GT 730 2GB
+gpu:afox:gt-730-4gb: {tier: 4, source: estimated}  # AFOX GT 730 4GB
+gpu:biostar:gt-730-4gb: {tier: 4, source: estimated}  # Biostar GT 730 4GB
+gpu:afox:gt-740-2gb: {tier: 5, source: estimated}  # AFOX GT 740 2GB
+gpu:afox:gt-740-4gb: {tier: 5, source: estimated}  # AFOX GT 740 4GB
+gpu:afox:gtx-1050-4gb: {tier: 12, source: estimated}  # AFOX GTX 1050 4GB
+gpu:afox:gtx-1050-ti-4gb: {tier: 15, source: estimated}  # AFOX GTX 1050 TI 4GB
+gpu:maxsun:gtx-1050-ti-4gb-ms-gtx-1050-ti-transformer4g-l0: {tier: 15, source: estimated}  # Maxsun GTX 1050 TI 4GB MS-GTX 1050 TI TRANSFORMER4G L0
+gpu:afox:gtx-1650-4gb: {tier: 18, source: estimated}  # AFOX GTX 1650 4GB
+gpu:cbr:gtx-1650-4gb: {tier: 18, source: estimated}  # CBR GTX 1650 4GB
+gpu:maxsun:gtx-1650-4gb-gtx-1650-transformer-4gd6: {tier: 18, source: estimated}  # Maxsun GTX 1650 4GB GTX 1650 TRANSFORMER 4GD6
+gpu:afox:gtx-1650-super-4gb: {tier: 21, source: estimated}  # AFOX GTX 1650 SUPER 4GB
+gpu:afox:gtx-1660-super-6gb: {tier: 26, source: estimated}  # AFOX GTX 1660 SUPER 6GB
+gpu:biostar:gtx-1660-super-6gb: {tier: 26, source: estimated}  # Biostar GTX 1660 SUPER 6GB
+gpu:cbr:gtx-1660-super-6gb: {tier: 26, source: estimated}  # CBR GTX 1660 SUPER 6GB
+gpu:afox:gtx-1660-ti-6gb: {tier: 27, source: estimated}  # AFOX GTX 1660 TI 6GB
+gpu:biostar:gtx-1660-ti-6gb: {tier: 27, source: estimated}  # Biostar GTX 1660 TI 6GB
+gpu:afox:gtx-750-2gb: {tier: 8, source: estimated}  # AFOX GTX 750 2GB
+gpu:afox:gtx-750-ti-4gb: {tier: 10, source: estimated}  # AFOX GTX 750 TI 4GB
+gpu:nvidia:quadro-p6000-24gb-oem: {tier: 35, source: estimated}  # NVIDIA Quadro P6000 24GB OEM
+gpu:nvidia:quadro-rtx-2000-ada-16gb-oem: {tier: 38, source: estimated}  # NVIDIA Quadro RTX 2000 Ada 16GB OEM
+gpu:nvidia:quadro-rtx-5000-ada-32gb-oem: {tier: 62, source: estimated}  # NVIDIA Quadro RTX 5000 Ada 32GB OEM
+gpu:nvidia:quadro-rtx-5880-ada-48gb: {tier: 65, source: estimated}  # NVIDIA Quadro RTX 5880 Ada 48GB
+gpu:nvidia:quadro-rtx-a2000-6gb-oem: {tier: 30, source: estimated}  # NVIDIA Quadro RTX A2000 6GB OEM
+gpu:nvidia:quadro-rtx-a400-4gb: {tier: 10, source: estimated}  # NVIDIA Quadro RTX A400 4GB
+gpu:nvidia:quadro-rtx-a4000-16gb-oem: {tier: 47, source: estimated}  # NVIDIA Quadro RTX A4000 16GB OEM
+gpu:nvidia:quadro-rtx-a4500-20gb-oem: {tier: 55, source: estimated}  # NVIDIA Quadro RTX A4500 20GB OEM
+gpu:nvidia:quadro-rtx-pro-2000-blackwell-16gb: {tier: 42, source: estimated}  # NVIDIA Quadro RTX PRO 2000 Blackwell 16GB
+gpu:nvidia:quadro-rtx-pro-2000-blackwell-16gb-oem: {tier: 42, source: estimated}  # NVIDIA Quadro RTX PRO 2000 Blackwell 16GB OEM
+gpu:nvidia:quadro-rtx-pro-4000-blackwell-24gb: {tier: 58, source: estimated}  # NVIDIA Quadro RTX PRO 4000 Blackwell 24GB
+gpu:nvidia:quadro-rtx-pro-4500-blackwell-32gb: {tier: 70, source: estimated}  # NVIDIA Quadro RTX PRO 4500 Blackwell 32GB
+gpu:nvidia:quadro-rtx-pro-4500-blackwell-server-edition-32gb: {tier: 70, source: estimated}  # NVIDIA Quadro RTX PRO 4500 Blackwell Server Edition 32GB
+gpu:nvidia:quadro-rtx-pro-5000-blackwell-48gb: {tier: 80, source: estimated}  # NVIDIA Quadro RTX PRO 5000 Blackwell 48GB
+gpu:nvidia:quadro-rtx-pro-5000-blackwell-48gb-oem: {tier: 80, source: estimated}  # NVIDIA Quadro RTX PRO 5000 Blackwell 48GB OEM
+gpu:nvidia:quadro-rtx-pro-5000-blackwell-72gb: {tier: 80, source: estimated}  # NVIDIA Quadro RTX PRO 5000 Blackwell 72GB
+gpu:nvidia:quadro-rtx-pro-5000-pny-48gb: {tier: 80, source: estimated}  # NVIDIA Quadro RTX PRO 5000 PNY 48GB
+gpu:nvidia:quadro-rtx-pro-6000-blackwell-max-q-96gb: {tier: 95, source: estimated}  # NVIDIA Quadro RTX PRO 6000 Blackwell Max-Q 96GB
+gpu:nvidia:quadro-rtx-pro-6000-blackwell-server-edition-96gb: {tier: 95, source: estimated}  # NVIDIA Quadro RTX PRO 6000 Blackwell Server Edition 96GB
+gpu:nvidia:quadro-rtx-pro-6000-blackwell-workstation-edition-96gb-900-5g144-2200-000: {tier: 95, source: estimated}  # NVIDIA Quadro RTX PRO 6000 Blackwell Workstation Edition 96GB 900-5G144-2200 -000
+gpu:afox:r5-220-2gb: {tier: 1, source: estimated}  # AFOX R5 220 2GB
+gpu:afox:r5-230-1gb: {tier: 2, source: estimated}  # AFOX R5 230 1GB
+gpu:afox:r7-350-2gb: {tier: 4, source: estimated}  # AFOX R7 350 2GB
+gpu:afox:r9-370-4gb: {tier: 5, source: estimated}  # AFOX R9 370 4GB
+gpu:cbr:rtx-2060-6gb: {tier: 28, source: estimated}  # CBR RTX 2060 6GB
+gpu:afox:rtx-2060-6gb: {tier: 28, source: estimated}  # AFOX RTX 2060 6GB
+gpu:afox:rtx-2060-super-8gb: {tier: 32, source: estimated}  # AFOX RTX 2060 SUPER 8GB
+gpu:biostar:rtx-2060-super-8gb: {tier: 32, source: estimated}  # Biostar RTX 2060 SUPER 8GB
+gpu:afox:rtx-3050-6gb: {tier: 23, source: estimated}  # AFOX RTX 3050 6GB
+gpu:biostar:rtx-3050-6gb: {tier: 23, source: estimated}  # Biostar RTX 3050 6GB
+gpu:maxsun:rtx-3050-6gb-ms-rtx-3050-trb-6g: {tier: 23, source: estimated}  # Maxsun RTX 3050 6GB MS-RTX 3050 TRB 6G
+gpu:msi:rtx-3050-6gb-rtx-3050-ventus-2x-e-6g-oc: {tier: 23, source: estimated}  # MSI RTX 3050 6GB RTX 3050 VENTUS 2X E 6G OC
+gpu:asus:rtx-3050-8gb: {tier: 23, source: estimated}  # ASUS RTX 3050 8GB
+gpu:afox:rtx-3050-8gb: {tier: 23, source: estimated}  # AFOX RTX 3050 8GB
+gpu:cbr:rtx-3050-8gb: {tier: 23, source: estimated}  # CBR RTX 3050 8GB
+gpu:msi:rtx-3050-8gb-rtx-3050-ventus-2x-xs-8g-oc: {tier: 23, source: estimated}  # MSI RTX 3050 8GB RTX 3050 VENTUS 2X XS 8G OC
+gpu:zotac:rtx-3050-eco-solo-8gb: {tier: 23, source: estimated}  # Zotac RTX 3050 Eco Solo 8GB
+gpu:asus:rtx-3050-lp-brk-oc-6gb: {tier: 23, source: estimated}  # ASUS RTX 3050 LP BRK OC 6GB
+gpu:asus:rtx-3050-oc-6gb: {tier: 23, source: estimated}  # ASUS RTX 3050 OC 6GB
+gpu:msi:rtx-3050-oc-6gb-rtx-3050-lp-e-6g-oc: {tier: 23, source: estimated}  # MSI RTX 3050 OC 6GB RTX 3050 LP E 6G OC
+gpu:palit:rtx-3050-stormx-6gb: {tier: 23, source: estimated}  # Palit RTX 3050 StormX 6GB
+gpu:palit:rtx-3050-stormx-oc-6gb: {tier: 23, source: estimated}  # Palit RTX 3050 StormX OC 6GB
+gpu:inno3d:rtx-3050-twin-x2-8gb: {tier: 23, source: estimated}  # INNO3D RTX 3050 Twin X2 8GB
+gpu:inno3d:rtx-3050-twin-x2-oc-v2-8gb: {tier: 23, source: estimated}  # INNO3D RTX 3050 Twin X2 OC V2 8GB
+gpu:gigabyte:rtx-3050-windforce-oc-6gb: {tier: 23, source: estimated}  # Gigabyte RTX 3050 WINDFORCE OC 6GB
+gpu:gigabyte:rtx-3050-windforce-oc-8gb: {tier: 23, source: estimated}  # Gigabyte RTX 3050 WindForce OC 8GB
+gpu:cbr:rtx-3060-12gb: {tier: 34, source: estimated}  # CBR RTX 3060 12GB
+gpu:afox:rtx-3060-12gb: {tier: 34, source: estimated}  # AFOX RTX 3060 12GB
+gpu:gigabyte:rtx-3060-12gb-gv-n3060wf2-oc-12gd-2-0: {tier: 34, source: estimated}  # Gigabyte RTX 3060 12GB GV-N3060WF2 OC-12GD 2.0
+gpu:asus:rtx-3060-12gb-lhr: {tier: 34, source: estimated}  # ASUS RTX 3060 12GB LHR
+gpu:gigabyte:rtx-3060-12gb-lhr-gv-n3060gaming-oc-12gd-2-0: {tier: 34, source: estimated}  # Gigabyte RTX 3060 12GB LHR GV-N3060GAMING OC-12GD 2.0
+gpu:msi:rtx-3060-12gb-rtx-3060-ventus-2x-12g: {tier: 34, source: estimated}  # MSI RTX 3060 12GB RTX 3060 VENTUS 2X 12G
+gpu:msi:rtx-3060-12gb-rtx-3060-ventus-2x-12g-oc: {tier: 34, source: estimated}  # MSI RTX 3060 12GB RTX 3060 VENTUS 2X 12G OC
+gpu:palit:rtx-3060-infinity-2-oc-12gb: {tier: 34, source: estimated}  # Palit RTX 3060 Infinity 2 OC 12GB
+gpu:afox:rtx-3060-ti-8gb: {tier: 40, source: estimated}  # AFOX RTX 3060 TI 8GB
+gpu:afox:rtx-3070-8gb: {tier: 46, source: estimated}  # AFOX RTX 3070 8GB
+gpu:biostar:rtx-3070-8gb: {tier: 46, source: estimated}  # Biostar RTX 3070 8GB
+gpu:cbr:rtx-3070-ti-8gb: {tier: 49, source: estimated}  # CBR RTX 3070 TI 8GB
+gpu:afox:rtx-3070-ti-8gb: {tier: 49, source: estimated}  # AFOX RTX 3070 TI 8GB
+gpu:msi:rtx-4080-oc-16gb-rtx-4080-16gb-ventus-3x-e-oc: {tier: 78, source: estimated}  # MSI RTX 4080 OC 16GB RTX 4080 16GB VENTUS 3X E OC
+gpu:afox:rtx-4090-24gb: {tier: 92, source: estimated}  # AFOX RTX 4090 24GB
+gpu:afox:rtx-4090-48gb: {tier: 92, source: estimated}  # AFOX RTX 4090 48GB
+gpu:afox:rtx-5050-8gb: {tier: 30, source: estimated}  # AFOX RTX 5050 8GB
+gpu:msi:rtx-5050-8gb-rtx-5050-8g-gaming: {tier: 30, source: estimated}  # MSI RTX 5050 8GB RTX 5050 8G GAMING
+gpu:msi:rtx-5050-8gb-rtx-5050-8g-shadow-2x: {tier: 30, source: estimated}  # MSI RTX 5050 8GB RTX 5050 8G SHADOW 2X
+gpu:msi:rtx-5050-8gb-rtx-5050-8g-ventus-2x: {tier: 30, source: estimated}  # MSI RTX 5050 8GB RTX 5050 8G VENTUS 2X
+gpu:gigabyte:rtx-5050-d6-8gb: {tier: 30, source: estimated}  # Gigabyte RTX 5050 D6 8GB
+gpu:palit:rtx-5050-dual-8gb: {tier: 30, source: estimated}  # Palit RTX 5050 Dual 8GB
+gpu:palit:rtx-5050-dual-oc-8gb: {tier: 30, source: estimated}  # Palit RTX 5050 Dual OC 8GB
+gpu:asus:rtx-5050-oc-8gb: {tier: 30, source: estimated}  # ASUS RTX 5050 OC 8GB
+gpu:msi:rtx-5050-oc-8gb-rtx-5050-8g-gaming-oc: {tier: 30, source: estimated}  # MSI RTX 5050 OC 8GB RTX 5050 8G GAMING OC
+gpu:msi:rtx-5050-oc-8gb-rtx-5050-8g-ventus-2x-oc: {tier: 30, source: estimated}  # MSI RTX 5050 OC 8GB RTX 5050 8G VENTUS 2X OC
+gpu:asus:rtx-5050-prime-oc-8gb: {tier: 30, source: estimated}  # ASUS RTX 5050 PRIME OC 8GB
+gpu:palit:rtx-5050-stormx-8gb: {tier: 30, source: estimated}  # Palit RTX 5050 StormX 8GB
+gpu:palit:rtx-5050-stormx-oc-8gb: {tier: 30, source: estimated}  # Palit RTX 5050 StormX OC 8GB
+gpu:gigabyte:rtx-5050-windforce-oc-8gb: {tier: 30, source: estimated}  # Gigabyte RTX 5050 WINDFORCE OC 8GB
+gpu:gigabyte:rtx-5050-windforce-oc-v2-8gb: {tier: 30, source: estimated}  # Gigabyte RTX 5050 WINDFORCE OC V2 8GB
+gpu:msi:rtx-5060-8gb-rtx-5060-8g-inspire-2x: {tier: 39, source: estimated}  # MSI RTX 5060 8GB RTX 5060 8G INSPIRE 2X
+gpu:msi:rtx-5060-8gb-rtx-5060-8g-ventus-2x-v1: {tier: 39, source: estimated}  # MSI RTX 5060 8GB RTX 5060 8G VENTUS 2X V1
+gpu:palit:rtx-5060-dual-8gb: {tier: 39, source: estimated}  # Palit RTX 5060 Dual 8GB
+gpu:palit:rtx-5060-dual-oc-8gb: {tier: 39, source: estimated}  # Palit RTX 5060 Dual OC 8GB
+gpu:asus:rtx-5060-dual-oc-8gb: {tier: 39, source: estimated}  # ASUS RTX 5060 Dual OC 8GB
+gpu:gigabyte:rtx-5060-eagle-max-oc-8gb-gv-n5060eaglemax-oc-8gd: {tier: 39, source: estimated}  # Gigabyte RTX 5060 EAGLE MAX OC 8GB GV-N5060EAGLEMAX OC-8GD
+gpu:gigabyte:rtx-5060-eagle-oc-8gb-gv-n5060eagle-oc-8gd: {tier: 39, source: estimated}  # Gigabyte RTX 5060 EAGLE OC 8GB GV-N5060EAGLE OC-8GD
+gpu:gigabyte:rtx-5060-eagle-oc-ice-8gb-gv-n5060eagleoc-ice-8gd: {tier: 39, source: estimated}  # Gigabyte RTX 5060 EAGLE OC ICE 8GB GV-N5060EAGLEOC ICE-8GD
+gpu:gigabyte:rtx-5060-gaming-oc-v2-8gb-gv-n5060gaming-ocv2-8gd: {tier: 39, source: estimated}  # Gigabyte RTX 5060 GAMING OC V2 8GB GV-N5060GAMING OCV2-8GD
+gpu:palit:rtx-5060-infinity-2-oc-8gb: {tier: 39, source: estimated}  # Palit RTX 5060 Infinity 2 OC 8GB
+gpu:asus:rtx-5060-lp-brk-8gb-oc: {tier: 39, source: estimated}  # ASUS RTX 5060 LP BRK 8GB OC
+gpu:gigabyte:rtx-5060-low-profile-oc-8gb: {tier: 39, source: estimated}  # Gigabyte RTX 5060 Low Profile OC 8GB
+gpu:msi:rtx-5060-oc-8gb-rtx-5060-8g-gaming-oc-v1: {tier: 39, source: estimated}  # MSI RTX 5060 OC 8GB RTX 5060 8G GAMING OC V1
+gpu:msi:rtx-5060-oc-8gb-rtx-5060-8g-gaming-trio-oc: {tier: 39, source: estimated}  # MSI RTX 5060 OC 8GB RTX 5060 8G GAMING TRIO OC
+gpu:msi:rtx-5060-oc-8gb-rtx-5060-8g-inspire-2x-oc: {tier: 39, source: estimated}  # MSI RTX 5060 OC 8GB RTX 5060 8G INSPIRE 2X OC
+gpu:msi:rtx-5060-oc-8gb-rtx-5060-8g-inspire-itx-oc: {tier: 39, source: estimated}  # MSI RTX 5060 OC 8GB RTX 5060 8G INSPIRE ITX OC
+gpu:msi:rtx-5060-oc-8gb-rtx-5060-8g-shadow-2x-oc-max: {tier: 39, source: estimated}  # MSI RTX 5060 OC 8GB RTX 5060 8G SHADOW 2X OC MAX
+gpu:msi:rtx-5060-oc-8gb-rtx-5060-8g-ventus-2x-oc: {tier: 39, source: estimated}  # MSI RTX 5060 OC 8GB RTX 5060 8G VENTUS 2X OC
+gpu:msi:rtx-5060-oc-8gb-rtx-5060-8g-ventus-2x-oc-v1: {tier: 39, source: estimated}  # MSI RTX 5060 OC 8GB RTX 5060 8G VENTUS 2X OC V1
+gpu:asus:rtx-5060-prime-oc-8gb: {tier: 39, source: estimated}  # ASUS RTX 5060 PRIME OC 8GB
+gpu:msi:rtx-5060-ti-16gb-rtx-5060-ti-16g-gaming-trio: {tier: 47, source: estimated}  # MSI RTX 5060 TI 16GB RTX 5060 TI 16G GAMING TRIO
+gpu:msi:rtx-5060-ti-16gb-rtx-5060-ti-16g-shadow-2x-plus: {tier: 47, source: estimated}  # MSI RTX 5060 TI 16GB RTX 5060 TI 16G SHADOW 2X PLUS
+gpu:msi:rtx-5060-ti-16gb-rtx-5060-ti-16g-ventus-2x-plus: {tier: 47, source: estimated}  # MSI RTX 5060 TI 16GB RTX 5060 TI 16G VENTUS 2X PLUS
+gpu:asus:rtx-5060-ti-8gb: {tier: 47, source: estimated}  # ASUS RTX 5060 TI 8GB
+gpu:gigabyte:rtx-5060-ti-aero-oc-8gb-gv-n506taero-oc-8gd: {tier: 47, source: estimated}  # Gigabyte RTX 5060 TI AERO OC 8GB GV-N506TAERO OC-8GD
+gpu:gigabyte:rtx-5060-ti-aorus-ai-box-16gb: {tier: 47, source: estimated}  # Gigabyte RTX 5060 TI AORUS AI BOX 16GB
+gpu:palit:rtx-5060-ti-dual-8gb: {tier: 47, source: estimated}  # Palit RTX 5060 TI Dual 8GB
+gpu:asus:rtx-5060-ti-dual-evo-oc-16gb-oem: {tier: 47, source: estimated}  # ASUS RTX 5060 TI Dual EVO OC 16GB OEM
+gpu:palit:rtx-5060-ti-dual-oc-8gb: {tier: 47, source: estimated}  # Palit RTX 5060 TI Dual OC 8GB
+gpu:gigabyte:rtx-5060-ti-eagle-max-oc-8gb-gv-n506teaglemax-oc-8gd: {tier: 47, source: estimated}  # Gigabyte RTX 5060 TI EAGLE MAX OC 8GB GV-N506TEAGLEMAX OC-8GD
+gpu:gigabyte:rtx-5060-ti-eagle-oc-8gb-gv-n506teagle-oc-8gd: {tier: 47, source: estimated}  # Gigabyte RTX 5060 TI EAGLE OC 8GB GV-N506TEAGLE OC-8GD
+gpu:gigabyte:rtx-5060-ti-eagle-oc-ice-8gb-gv-n506teagleoc-ice-8gd: {tier: 47, source: estimated}  # Gigabyte RTX 5060 TI EAGLE OC ICE 8GB GV-N506TEAGLEOC ICE-8GD
+gpu:gigabyte:rtx-5060-ti-gaming-oc-8gb-gv-n506tgaming-oc-8gd: {tier: 47, source: estimated}  # Gigabyte RTX 5060 TI GAMING OC 8GB GV-N506TGAMING OC-8GD
+gpu:palit:rtx-5060-ti-infinity-3-16gb: {tier: 47, source: estimated}  # Palit RTX 5060 TI Infinity 3 16GB
+gpu:palit:rtx-5060-ti-infinity-3-8gb: {tier: 47, source: estimated}  # Palit RTX 5060 TI Infinity 3 8GB
+gpu:palit:rtx-5060-ti-infinity-3-oc-16gb: {tier: 47, source: estimated}  # Palit RTX 5060 TI Infinity 3 OC 16GB
+gpu:palit:rtx-5060-ti-infinity-3-oc-8gb: {tier: 47, source: estimated}  # Palit RTX 5060 TI Infinity 3 OC 8GB
+gpu:asus:rtx-5060-ti-oc-16gb: {tier: 47, source: estimated}  # ASUS RTX 5060 TI OC 16GB
+gpu:msi:rtx-5060-ti-oc-16gb-rtx-5060-ti-16g-inspire-2x-oc: {tier: 47, source: estimated}  # MSI RTX 5060 TI OC 16GB RTX 5060 TI 16G INSPIRE 2X OC
+gpu:msi:rtx-5060-ti-oc-16gb-rtx-5060-ti-16g-shadow-2x-oc-plus: {tier: 47, source: estimated}  # MSI RTX 5060 TI OC 16GB RTX 5060 TI 16G SHADOW 2X OC PLUS
+gpu:msi:rtx-5060-ti-oc-16gb-rtx-5060-ti-16g-ventus-2x-oc-plus: {tier: 47, source: estimated}  # MSI RTX 5060 TI OC 16GB RTX 5060 TI 16G VENTUS 2X OC PLUS
+gpu:asus:rtx-5060-ti-oc-8gb: {tier: 47, source: estimated}  # ASUS RTX 5060 TI OC 8GB
+gpu:msi:rtx-5060-ti-oc-8gb-rtx-5060-ti-8g-gaming-trio-oc: {tier: 47, source: estimated}  # MSI RTX 5060 TI OC 8GB RTX 5060 TI 8G GAMING TRIO OC
+gpu:msi:rtx-5060-ti-oc-8gb-rtx-5060-ti-8g-shadow-2x-oc-plus: {tier: 47, source: estimated}  # MSI RTX 5060 TI OC 8GB RTX 5060 TI 8G SHADOW 2X OC PLUS
+gpu:msi:rtx-5060-ti-oc-8gb-rtx-5060-ti-8g-shadow-3x-oc-classic: {tier: 47, source: estimated}  # MSI RTX 5060 TI OC 8GB RTX 5060 TI 8G SHADOW 3X OC CLASSIC
+gpu:asus:rtx-5060-ti-prime-oc-16gb: {tier: 47, source: estimated}  # ASUS RTX 5060 TI PRIME OC 16GB
+gpu:zotac:rtx-5060-ti-twin-edge-8gb: {tier: 47, source: estimated}  # Zotac RTX 5060 TI Twin Edge 8GB
+gpu:zotac:rtx-5060-ti-twin-edge-oc-8gb: {tier: 47, source: estimated}  # Zotac RTX 5060 TI Twin Edge OC 8GB
+gpu:inno3d:rtx-5060-ti-twin-x2-8gb: {tier: 47, source: estimated}  # INNO3D RTX 5060 TI Twin X2 8GB
+gpu:gigabyte:rtx-5060-ti-windforce-max-oc-16gb-gv-n506twf2max-oc-16gd: {tier: 47, source: estimated}  # Gigabyte RTX 5060 TI WINDFORCE MAX OC 16GB GV-N506TWF2MAX OC-16GD
+gpu:gigabyte:rtx-5060-ti-windforce-max-oc-8gb-gv-n506twf2max-oc-8gd: {tier: 47, source: estimated}  # Gigabyte RTX 5060 TI WINDFORCE MAX OC 8GB GV-N506TWF2MAX OC-8GD
+gpu:palit:rtx-5060-ti-white-oc-16gb: {tier: 47, source: estimated}  # Palit RTX 5060 TI White OC 16GB
+gpu:palit:rtx-5060-ti-white-oc-8gb: {tier: 47, source: estimated}  # Palit RTX 5060 TI White OC 8GB
+gpu:asus:rtx-5060-tuf-gaming-oc-8gb: {tier: 39, source: estimated}  # ASUS RTX 5060 TUF Gaming OC 8GB
+gpu:zotac:rtx-5060-twin-edge-8gb: {tier: 39, source: estimated}  # Zotac RTX 5060 Twin Edge 8GB
+gpu:zotac:rtx-5060-twin-edge-oc-8gb: {tier: 39, source: estimated}  # Zotac RTX 5060 Twin Edge OC 8GB
+gpu:zotac:rtx-5060-twin-edge-plus-8gb: {tier: 39, source: estimated}  # Zotac RTX 5060 Twin Edge Plus 8GB
+gpu:zotac:rtx-5060-twin-edge-white-oc-8gb: {tier: 39, source: estimated}  # Zotac RTX 5060 Twin Edge White OC 8GB
+gpu:inno3d:rtx-5060-twin-x2-8gb: {tier: 39, source: estimated}  # INNO3D RTX 5060 Twin X2 8GB
+gpu:inno3d:rtx-5060-twin-x2-oc-v2-8gb: {tier: 39, source: estimated}  # INNO3D RTX 5060 Twin X2 OC V2 8GB
+gpu:inno3d:rtx-5060-twin-x2-oc-white-8gb: {tier: 39, source: estimated}  # INNO3D RTX 5060 Twin X2 OC White 8GB
+gpu:gigabyte:rtx-5060-windforce-max-oc-8gb-gv-n5060wf2max-oc-8gd: {tier: 39, source: estimated}  # Gigabyte RTX 5060 WINDFORCE MAX OC 8GB GV-N5060WF2MAX OC-8GD
+gpu:gigabyte:rtx-5060-windforce-max-oc-v2-8gb-gv-n5060wf2max-ocv2-8gd: {tier: 39, source: estimated}  # Gigabyte RTX 5060 WINDFORCE MAX OC V2 8GB GV-N5060WF2MAX OCV2-8GD
+gpu:gigabyte:rtx-5060-windforce-oc-8gb: {tier: 39, source: estimated}  # Gigabyte RTX 5060 WINDFORCE OC 8GB
+gpu:palit:rtx-5060-white-oc-8gb: {tier: 39, source: estimated}  # Palit RTX 5060 White OC 8GB
+gpu:msi:rtx-5070-12gb-rtx-5070-12g-shadow-2x: {tier: 56, source: estimated}  # MSI RTX 5070 12GB RTX 5070 12G SHADOW 2X
+gpu:gigabyte:rtx-5070-aero-oc-12gb-gv-n5070aero-oc-12gd: {tier: 56, source: estimated}  # Gigabyte RTX 5070 AERO OC 12GB GV-N5070AERO OC-12GD
+gpu:gigabyte:rtx-5070-aorus-master-oc-12gb-gv-n5070aorus-m-12gd: {tier: 56, source: estimated}  # Gigabyte RTX 5070 AORUS MASTER OC 12GB GV-N5070AORUS M-12GD
+gpu:gigabyte:rtx-5070-eagle-oc-ice-sff-12gb-gv-n5070eagleoc-ice-12gd: {tier: 56, source: estimated}  # Gigabyte RTX 5070 EAGLE OC ICE SFF 12GB GV-N5070EAGLEOC ICE-12GD
+gpu:gigabyte:rtx-5070-eagle-oc-sff-12gb-gv-n5070eagle-oc-12gd: {tier: 56, source: estimated}  # Gigabyte RTX 5070 EAGLE OC SFF 12GB GV-N5070EAGLE OC-12GD
+gpu:gigabyte:rtx-5070-gaming-oc-12gb-gv-n5070gaming-oc-12gd: {tier: 56, source: estimated}  # Gigabyte RTX 5070 GAMING OC 12GB GV-N5070GAMING OC-12GD
+gpu:palit:rtx-5070-gamingpro-12gb: {tier: 56, source: estimated}  # Palit RTX 5070 GamingPro 12GB
+gpu:palit:rtx-5070-gamingpro-s-12gb: {tier: 56, source: estimated}  # Palit RTX 5070 GamingPro-S 12GB
+gpu:palit:rtx-5070-gamingpro-s-oc-12gb: {tier: 56, source: estimated}  # Palit RTX 5070 GamingPro-S OC 12GB
+gpu:palit:rtx-5070-infinity-3-12gb: {tier: 56, source: estimated}  # Palit RTX 5070 Infinity 3 12GB
+gpu:palit:rtx-5070-infinity-3-oc-12gb: {tier: 56, source: estimated}  # Palit RTX 5070 Infinity 3 OC 12GB
+gpu:asus:rtx-5070-oc-12gb: {tier: 56, source: estimated}  # ASUS RTX 5070 OC 12GB
+gpu:msi:rtx-5070-oc-12gb-rtx-5070-12g-gaming-trio-oc: {tier: 56, source: estimated}  # MSI RTX 5070 OC 12GB RTX 5070 12G GAMING TRIO OC
+gpu:msi:rtx-5070-oc-12gb-rtx-5070-12g-shadow-2x-oc: {tier: 56, source: estimated}  # MSI RTX 5070 OC 12GB RTX 5070 12G SHADOW 2X OC
+gpu:msi:rtx-5070-oc-12gb-rtx-5070-12g-shadow-3x-oc: {tier: 56, source: estimated}  # MSI RTX 5070 OC 12GB RTX 5070 12G SHADOW 3X OC
+gpu:asus:rtx-5070-prime-oc-12gb: {tier: 56, source: estimated}  # ASUS RTX 5070 PRIME OC 12GB
+gpu:msi:rtx-5070-ti-16gb-rtx-5070-ti-16g-gaming-trio: {tier: 68, source: estimated}  # MSI RTX 5070 TI 16GB RTX 5070 TI 16G GAMING TRIO
+gpu:msi:rtx-5070-ti-16gb-rtx-5070-ti-16g-shadow-3x: {tier: 68, source: estimated}  # MSI RTX 5070 TI 16GB RTX 5070 TI 16G SHADOW 3X
+gpu:gigabyte:rtx-5070-ti-aero-oc-16gb-gv-n507taero-oc-16gd: {tier: 68, source: estimated}  # Gigabyte RTX 5070 TI AERO OC 16GB GV-N507TAERO OC-16GD
+gpu:gigabyte:rtx-5070-ti-aorus-master-oc-16gb-gv-n507taorus-m-16gd: {tier: 68, source: estimated}  # Gigabyte RTX 5070 TI AORUS MASTER OC 16GB GV-N507TAORUS M-16GD
+gpu:gigabyte:rtx-5070-ti-eagle-oc-ice-sff-16gb-gv-n507teagleoc-ice-16gd: {tier: 68, source: estimated}  # Gigabyte RTX 5070 TI EAGLE OC ICE SFF 16GB GV-N507TEAGLEOC ICE-16GD
+gpu:gigabyte:rtx-5070-ti-eagle-oc-sff-16gb-gv-n507teagle-oc-16gd: {tier: 68, source: estimated}  # Gigabyte RTX 5070 TI EAGLE OC SFF 16GB GV-N507TEAGLE OC-16GD
+gpu:gigabyte:rtx-5070-ti-gaming-oc-16gb-gv-n507tgaming-oc-16gd: {tier: 68, source: estimated}  # Gigabyte RTX 5070 TI GAMING OC 16GB GV-N507TGAMING OC-16GD
+gpu:palit:rtx-5070-ti-gamingpro-16gb: {tier: 68, source: estimated}  # Palit RTX 5070 TI GamingPro 16GB
+gpu:palit:rtx-5070-ti-gamingpro-oc-16gb: {tier: 68, source: estimated}  # Palit RTX 5070 TI GamingPro OC 16GB
+gpu:palit:rtx-5070-ti-gamingpro-s-16gb: {tier: 68, source: estimated}  # Palit RTX 5070 TI GamingPro-S 16GB
+gpu:palit:rtx-5070-ti-gamingpro-s-oc-16gb: {tier: 68, source: estimated}  # Palit RTX 5070 TI GamingPro-S OC 16GB
+gpu:msi:rtx-5070-ti-oc-16gb-rtx-5070-ti-16g-gaming-trio-oc: {tier: 68, source: estimated}  # MSI RTX 5070 TI OC 16GB RTX 5070 TI 16G GAMING TRIO OC
+gpu:msi:rtx-5070-ti-oc-16gb-rtx-5070-ti-16g-shadow-3x-oc: {tier: 68, source: estimated}  # MSI RTX 5070 TI OC 16GB RTX 5070 TI 16G SHADOW 3X OC
+gpu:asus:rtx-5070-ti-prime-oc-16gb: {tier: 68, source: estimated}  # ASUS RTX 5070 TI PRIME OC 16GB
+gpu:gigabyte:rtx-5070-ti-windforce-oc-sff-16gb: {tier: 68, source: estimated}  # Gigabyte RTX 5070 TI WINDFORCE OC SFF 16GB
+gpu:gigabyte:rtx-5070-ti-windforce-sff-16gb: {tier: 68, source: estimated}  # Gigabyte RTX 5070 TI WINDFORCE SFF 16GB
+gpu:zotac:rtx-5070-twin-edge-oc-12gb: {tier: 56, source: estimated}  # Zotac RTX 5070 Twin Edge OC 12GB
+gpu:gigabyte:rtx-5070-windforce-oc-sff-12gb: {tier: 56, source: estimated}  # Gigabyte RTX 5070 WINDFORCE OC SFF 12GB
+gpu:palit:rtx-5070-white-oc-12gb: {tier: 56, source: estimated}  # Palit RTX 5070 White OC 12GB
+gpu:msi:rtx-5080-16gb-rtx-5080-16g-gaming-trio: {tier: 85, source: estimated}  # MSI RTX 5080 16GB RTX 5080 16G GAMING TRIO
+gpu:msi:rtx-5080-16gb-rtx-5080-16g-shadow-3x: {tier: 85, source: estimated}  # MSI RTX 5080 16GB RTX 5080 16G SHADOW 3X
+gpu:msi:rtx-5080-16gb-rtx-5080-16g-ventus-3x: {tier: 85, source: estimated}  # MSI RTX 5080 16GB RTX 5080 16G VENTUS 3X
+gpu:gigabyte:rtx-5080-aero-oc-sff-16gb-gv-n5080aero-oc-16gd: {tier: 85, source: estimated}  # Gigabyte RTX 5080 AERO OC SFF 16GB GV-N5080AERO OC-16GD
+gpu:gigabyte:rtx-5080-aorus-master-ice-oc-16gb-gv-n5080aorusm-ice-16gd: {tier: 85, source: estimated}  # Gigabyte RTX 5080 AORUS MASTER ICE OC 16GB GV-N5080AORUSM ICE-16GD
+gpu:gigabyte:rtx-5080-aorus-master-oc-16gb-gv-n5080aorus-m-16gd: {tier: 85, source: estimated}  # Gigabyte RTX 5080 AORUS MASTER OC 16GB GV-N5080AORUS M-16GD
+gpu:gigabyte:rtx-5080-aorus-xtreme-waterforce-oc-16gb-gv-n5080aorusx-w-16gd: {tier: 85, source: estimated}  # Gigabyte RTX 5080 AORUS XTREME WATERFORCE OC 16GB GV-N5080AORUSX W-16GD
+gpu:gigabyte:rtx-5080-aorus-xtreme-waterforce-wb-oc-16gb-gv-n5080aorusx-wb-16gd: {tier: 85, source: estimated}  # Gigabyte RTX 5080 AORUS XTREME WATERFORCE WB OC 16GB GV-N5080AORUSX WB-16GD
+gpu:gigabyte:rtx-5080-gaming-16gb: {tier: 85, source: estimated}  # Gigabyte RTX 5080 GAMING 16GB
+gpu:gigabyte:rtx-5080-gaming-oc-16gb-gv-n5080gaming-oc-16gd: {tier: 85, source: estimated}  # Gigabyte RTX 5080 GAMING OC 16GB GV-N5080GAMING OC-16GD
+gpu:palit:rtx-5080-gamingpro-16gb: {tier: 85, source: estimated}  # Palit RTX 5080 GamingPro 16GB
+gpu:palit:rtx-5080-gamingpro-oc-16gb: {tier: 85, source: estimated}  # Palit RTX 5080 GamingPro OC 16GB
+gpu:palit:rtx-5080-gamingpro-oc-v1-16gb: {tier: 85, source: estimated}  # Palit RTX 5080 GamingPro OC V1 16GB
+gpu:palit:rtx-5080-gamingpro-v1-16gb: {tier: 85, source: estimated}  # Palit RTX 5080 GamingPro V1 16GB
+gpu:palit:rtx-5080-infinity-3-16gb: {tier: 85, source: estimated}  # Palit RTX 5080 Infinity 3 16GB
+gpu:palit:rtx-5080-infinity-3-oc-16gb: {tier: 85, source: estimated}  # Palit RTX 5080 Infinity 3 OC 16GB
+gpu:msi:rtx-5080-oc-16gb-rtx-5080-16g-gaming-trio-oc: {tier: 85, source: estimated}  # MSI RTX 5080 OC 16GB RTX 5080 16G GAMING TRIO OC
+gpu:msi:rtx-5080-oc-16gb-rtx-5080-16g-inspire-3x-oc: {tier: 85, source: estimated}  # MSI RTX 5080 OC 16GB RTX 5080 16G INSPIRE 3X OC
+gpu:msi:rtx-5080-oc-16gb-rtx-5080-16g-shadow-3x-oc: {tier: 85, source: estimated}  # MSI RTX 5080 OC 16GB RTX 5080 16G SHADOW 3X OC
+gpu:msi:rtx-5080-oc-16gb-rtx-5080-16g-ventus-3x-oc: {tier: 85, source: estimated}  # MSI RTX 5080 OC 16GB RTX 5080 16G VENTUS 3X OC
+gpu:asus:rtx-5080-prime-evo-oc-16gb: {tier: 85, source: estimated}  # ASUS RTX 5080 PRIME EVO OC 16GB
+gpu:asus:rtx-5080-prime-oc-16gb: {tier: 85, source: estimated}  # ASUS RTX 5080 PRIME OC 16GB
+gpu:asus:rtx-5080-proart-oc-16gb: {tier: 85, source: estimated}  # ASUS RTX 5080 ProArt OC 16GB
+gpu:asus:rtx-5080-rog-astral-oc-16gb: {tier: 85, source: estimated}  # ASUS RTX 5080 ROG Astral OC 16GB
+gpu:asus:rtx-5080-tuf-gaming-oc-16gb: {tier: 85, source: estimated}  # ASUS RTX 5080 TUF Gaming OC 16GB
+gpu:gigabyte:rtx-5080-windforce-oc-sff-16gb: {tier: 85, source: estimated}  # Gigabyte RTX 5080 WINDFORCE OC SFF 16GB
+gpu:gigabyte:rtx-5080-windforce-oc-v2-sff-16gb: {tier: 85, source: estimated}  # Gigabyte RTX 5080 WINDFORCE OC V2 SFF 16GB
+gpu:gigabyte:rtx-5080-windforce-sff-16gb: {tier: 85, source: estimated}  # Gigabyte RTX 5080 WINDFORCE SFF 16GB
+gpu:inno3d:rtx-5080-x3-16gb: {tier: 85, source: estimated}  # INNO3D RTX 5080 X3 16GB
+gpu:inno3d:rtx-5080-x3-oc-16gb: {tier: 85, source: estimated}  # INNO3D RTX 5080 X3 OC 16GB
+gpu:palit:rtx-5090-gamerock-32gb: {tier: 100, source: estimated}  # Palit RTX 5090 GameRock 32GB
+gpu:palit:rtx-5090-gamerock-oc-32gb: {tier: 100, source: estimated}  # Palit RTX 5090 GameRock OC 32GB
+gpu:asus:rtx-5090-rog-astral-btf-oc-32gb: {tier: 100, source: estimated}  # ASUS RTX 5090 ROG Astral BTF OC 32GB
+gpu:asus:rtx-5090-rog-astral-oc-32gb: {tier: 100, source: estimated}  # ASUS RTX 5090 ROG Astral OC 32GB
+gpu:asus:rtx-5090-tuf-gaming-oc-32gb: {tier: 100, source: estimated}  # ASUS RTX 5090 TUF Gaming OC 32GB
+gpu:afox:rx-550-2gb: {tier: 6, source: estimated}  # AFOX RX 550 2GB
+gpu:cbr:rx-550-4gb: {tier: 6, source: estimated}  # CBR RX 550 4GB
+gpu:afox:rx-5500-xt-8gb: {tier: 19, source: estimated}  # AFOX RX 5500 XT 8GB
+gpu:afox:rx-560-4gb: {tier: 9, source: estimated}  # AFOX RX 560 4GB
+gpu:afox:rx-5700-xt-8gb: {tier: 36, source: estimated}  # AFOX RX 5700 XT 8GB
+gpu:afox:rx-580-4gb: {tier: 16, source: estimated}  # AFOX RX 580 4GB
+gpu:afox:rx-580-8gb: {tier: 16, source: estimated}  # AFOX RX 580 8GB
+gpu:afox:rx-6500-xt-4gb: {tier: 20, source: estimated}  # AFOX RX 6500 XT 4GB
+gpu:gigabyte:rx-6500-xt-4gb: {tier: 20, source: estimated}  # Gigabyte RX 6500 XT 4GB
+gpu:afox:rx-6650-xt-8gb: {tier: 38, source: estimated}  # AFOX RX 6650 XT 8GB
+gpu:afox:rx-7600-8gb: {tier: 37, source: estimated}  # AFOX RX 7600 8GB
+gpu:gigabyte:rx-7600-8gb-gv-r76gaming-oc-8gd: {tier: 37, source: estimated}  # Gigabyte RX 7600 8GB GV-R76GAMING OC-8GD
+gpu:sapphire:rx-7600-pulse-8gb: {tier: 37, source: estimated}  # Sapphire RX 7600 Pulse 8GB
+gpu:asrock:rx-7650-gre-challenger-oc-8gb-rx-7650gre-cl-8go: {tier: 40, source: estimated}  # ASRock RX 7650 GRE Challenger OC 8GB RX 7650GRE CL 8GO
+gpu:asus:rx-9060-xt-16gb: {tier: 45, source: estimated}  # ASUS RX 9060 XT 16GB
+gpu:asus:rx-9060-xt-8gb: {tier: 45, source: estimated}  # ASUS RX 9060 XT 8GB
+gpu:gigabyte:rx-9060-xt-gaming-oc-8gb-gv-r9060xtgaming-oc-8gd: {tier: 45, source: estimated}  # Gigabyte RX 9060 XT GAMING OC 8GB GV-R9060XTGAMING OC-8GD
+gpu:acer:rx-9060-xt-nitro-white-oc-8gb: {tier: 45, source: estimated}  # Acer RX 9060 XT Nitro White OC 8GB
+gpu:sapphire:rx-9060-xt-nitro-oc-16gb: {tier: 45, source: estimated}  # Sapphire RX 9060 XT Nitro+ OC 16GB
+gpu:asus:rx-9060-xt-prime-oc-16gb: {tier: 45, source: estimated}  # ASUS RX 9060 XT PRIME OC 16GB
+gpu:sapphire:rx-9060-xt-pulse-8gb: {tier: 45, source: estimated}  # Sapphire RX 9060 XT Pulse 8GB
+gpu:sapphire:rx-9060-xt-pulse-gaming-oc-16gb: {tier: 45, source: estimated}  # Sapphire RX 9060 XT Pulse Gaming OC 16GB
+gpu:sapphire:rx-9060-xt-pulse-oc-8gb: {tier: 45, source: estimated}  # Sapphire RX 9060 XT Pulse OC 8GB
+gpu:sapphire:rx-9060-xt-pure-gaming-oc-16gb: {tier: 45, source: estimated}  # Sapphire RX 9060 XT Pure Gaming OC 16GB
+gpu:gigabyte:rx-9070-gaming-16gb: {tier: 65, source: estimated}  # Gigabyte RX 9070 GAMING 16GB
+gpu:gigabyte:rx-9070-gaming-oc-16gb-gv-r9070gaming-oc-16gd: {tier: 65, source: estimated}  # Gigabyte RX 9070 GAMING OC 16GB GV-R9070GAMING OC-16GD
+gpu:gigabyte:rx-9070-gre-gaming-oc-12gb-gv-r907gregaming-oc-12gd: {tier: 58, source: estimated}  # Gigabyte RX 9070 GRE GAMING OC 12GB GV-R907GREGAMING OC-12GD
+gpu:sapphire:rx-9070-nitro-oc-16gb: {tier: 65, source: estimated}  # Sapphire RX 9070 Nitro+ OC 16GB
+gpu:asus:rx-9070-oc-16gb: {tier: 65, source: estimated}  # ASUS RX 9070 OC 16GB
+gpu:acer:rx-9070-predator-bifrost-oc-16gb: {tier: 65, source: estimated}  # Acer RX 9070 Predator BiFrost OC 16GB
+gpu:sapphire:rx-9070-pulse-16gb: {tier: 65, source: estimated}  # Sapphire RX 9070 Pulse 16GB
+gpu:sapphire:rx-9070-pure-oc-16gb: {tier: 65, source: estimated}  # Sapphire RX 9070 Pure OC 16GB
+gpu:gigabyte:rx-9070-xt-aorus-elite-oc-16gb-gv-r9070xtaorus-e-16gd: {tier: 72, source: estimated}  # Gigabyte RX 9070 XT AORUS ELITE OC 16GB GV-R9070XTAORUS E-16GD
+gpu:gigabyte:rx-9070-xt-gaming-oc-16gb-gv-r9070xtgaming-oc-16gd: {tier: 72, source: estimated}  # Gigabyte RX 9070 XT GAMING OC 16GB GV-R9070XTGAMING OC-16GD
+gpu:sapphire:rx-9070-xt-nitro-16gb: {tier: 72, source: estimated}  # Sapphire RX 9070 XT Nitro+ 16GB
+gpu:asus:rx-9070-xt-oc-16gb: {tier: 72, source: estimated}  # ASUS RX 9070 XT OC 16GB
+gpu:sapphire:rx-9070-xt-pulse-16gb: {tier: 72, source: estimated}  # Sapphire RX 9070 XT Pulse 16GB
+gpu:sapphire:rx-9070-xt-pure-16gb: {tier: 72, source: estimated}  # Sapphire RX 9070 XT Pure 16GB
