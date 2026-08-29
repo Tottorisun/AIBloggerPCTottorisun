@@ -10,6 +10,7 @@ from __future__ import annotations
 import random
 import time
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from datetime import datetime
 from urllib.parse import urljoin
 
@@ -39,6 +40,8 @@ class BaseSource(ABC):
         min_delay: float = 3.0,
         max_delay: float = 5.0,
         max_retries: int = 3,
+        offer_sink: Callable[[list[RawOffer]], None] | None = None,
+        max_pages: int | None = None,
     ) -> None:
         self.client = client or httpx.Client(
             headers={"User-Agent": USER_AGENT},
@@ -48,15 +51,40 @@ class BaseSource(ABC):
         self.min_delay = min_delay
         self.max_delay = max_delay
         self.max_retries = max_retries
+        self.offer_sink = offer_sink
+        # Per-run pagination cap. Defaults to the source's own MAX_PAGES;
+        # overriding it is how a caller keeps a run deliberately small (a
+        # smoke test, a proof run) without editing the adapter.
+        self.max_pages = max_pages if max_pages is not None else getattr(self, "MAX_PAGES", None)
         self._robots: RobotsPolicy | None = None
         self.log = structlog.get_logger().bind(source=self.name)
+
+    def _transport_get(self, url: str, **kwargs: object) -> httpx.Response:
+        """The single place a source actually touches the network.
+
+        Overriding this (and nothing else) is how a source swaps in a
+        different transport — e.g. citilink.py drives a real browser — while
+        keeping every robots.txt check, WAF check, retry and backoff in this
+        class authoritative for all sources alike."""
+        return self.client.get(url, **kwargs)
+
+    def _checkpoint(self, offers: list[RawOffer]) -> None:
+        """Hand one completed unit of work (normally one catalog page) to the
+        caller so it can be persisted NOW.
+
+        Portfolio hard rule, learned from a real data-loss near-miss: a long
+        scrape commits each unit as it finishes and never batches everything
+        into a single save at the end. If this run dies on page 7, pages 1-6
+        must already be durably in the database, not in a list in memory."""
+        if self.offer_sink is not None and offers:
+            self.offer_sink(offers)
 
     def _load_robots(self) -> RobotsPolicy:
         if self._robots is None:
             robots_url = urljoin(self.base_url, "/robots.txt")
             waf = None
             try:
-                resp = self.client.get(robots_url, timeout=10.0)
+                resp = self._transport_get(robots_url, timeout=10.0)
                 waf = _waf_vendor(resp) if resp.status_code in (403, 429) else None
                 resp.raise_for_status()
                 self._robots = parse_robots(resp.text, USER_AGENT)
@@ -78,6 +106,14 @@ class BaseSource(ABC):
     def _sleep(self) -> None:
         time.sleep(random.uniform(self.min_delay, self.max_delay))
 
+    def _backoff_seconds(self, attempt: int) -> float:
+        """Seconds to wait before retry `attempt` (1-based).
+
+        Exponential by default. A source whose retries cost a real browser
+        navigation against a protected site overrides this with something
+        far more patient — see citilink.py."""
+        return (2**attempt) + random.uniform(0, 1)
+
     def get(self, url: str, **kwargs: object) -> httpx.Response:
         """Polite, retrying, robots-respecting GET. Raises SourceBlocked on
         anything that looks like an anti-bot response or persistent failure."""
@@ -86,11 +122,11 @@ class BaseSource(ABC):
         last_exc: Exception | None = None
         for attempt in range(self.max_retries + 1):
             if attempt > 0:
-                backoff = (2**attempt) + random.uniform(0, 1)
+                backoff = self._backoff_seconds(attempt)
                 self.log.warning("request_retry", url=url, attempt=attempt, backoff=round(backoff, 1))
                 time.sleep(backoff)
             try:
-                resp = self.client.get(url, **kwargs)
+                resp = self._transport_get(url, **kwargs)
             except httpx.HTTPError as exc:
                 last_exc = exc
                 continue
@@ -125,12 +161,33 @@ class BaseSource(ABC):
 
 
 def _looks_like_captcha(resp: httpx.Response) -> bool:
+    """Heuristic "this is a block page, not content".
+
+    The marker scan is confined to the top of the document ON PURPOSE, and
+    a fully-rendered application page is exempted outright. Both guards
+    exist because of a documented false alarm (29.08.2026 source
+    evaluation): a *healthy* 1.4 MB Citilink catalog page contains both
+    "captcha" and "qrator" — the first as an inert key in the shop's own
+    login-form Redux state, the second as the name of an ordinary session
+    cookie, since Qrator fronts the whole site including pages it serves
+    normally. Both sit ~1.4 MB deep in embedded JSON.
+
+    A genuine challenge page is the opposite shape: small, no application
+    payload, and its message is at the top. So: never conclude "blocked"
+    from a substring that merely appears somewhere in a large, populated
+    page."""
     if resp.status_code in (401, 403):
         return True
     content_type = resp.headers.get("content-type", "")
     if "text/html" not in content_type:
         return False
-    snippet = resp.text[:4000].lower()
+    text = resp.text
+    low = text.lower()
+    # A big document that carries a real app payload is a rendered page, not
+    # an interstitial — whatever words happen to be buried in its JSON.
+    if len(text) > 60_000 and ("__next_data__" in low or "application/ld+json" in low):
+        return False
+    snippet = low[:4000]
     return any(marker in snippet for marker in ("captcha", "are you a robot", "access denied", "attention required"))
 
 

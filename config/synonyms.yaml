@@ -56,6 +56,32 @@ brand_aliases:
   nzxt: NZXT
   antec: Antec
 
+  # Hyphenated / spaced spellings of brands ALREADY listed above. Lookup is
+  # a \b-anchored match of the token against the lowercased title, so
+  # "idcooling" simply never matches a title that writes "ID-COOLING" — the
+  # entry above it was unreachable for real titles. Found 29.08.2026 when
+  # Citilink (which supplies no vendor field, so it depends entirely on this
+  # table) sent 24 of 36 coolers to `unmatched` with "could not resolve
+  # brand", every one of them an ID-COOLING part.
+  id-cooling: ID-COOLING
+  cooler master: Cooler Master
+  be quiet: be quiet!
+
+  # Cooler/case brands that were missing outright. Not invented — each one
+  # is a brand string this project already stores in `products`, learned
+  # from Regard's structured vendor field. Appended at the end on purpose:
+  # _resolve_brand returns the FIRST matching alias, so adding entries here
+  # cannot change how any title already resolves.
+  digma: Digma
+  formula: Formula
+  bloody: Bloody
+  pccooler: PCcooler
+  jonsbo: Jonsbo
+  gelid: GELID
+  arctic: Arctic
+  scythe: Scythe
+  silverstone: Silverstone
+
 # Marketing / chip-brand words that add no identifying information once the
 # real brand (AIB partner, module maker, ...) is already known, so they are
 # dropped before the remaining title text is tokenized into a model name.
@@ -81,6 +107,15 @@ noise_words:
   - Блок питания
   - Корпус
   - Кулер
+  # Citilink's category phrasings. Listed longest-first because
+  # _strip_noise_words removes entries in order and the shorter phrase is a
+  # substring of the longer one. Without these, a Citilink cooler tokenizes
+  # to "устройство-охлаждения-ag400-4-pin-черный" and can never collapse
+  # onto Regard's "ag400" for the same physical part — the category noun
+  # becomes part of the product identity.
+  - Система водяного охлаждения
+  - Система охлаждения
+  - Устройство охлаждения
   - Graphics
   - Video
   - Card

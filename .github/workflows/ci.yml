@@ -41,12 +41,18 @@ jobs:
         run: python -c "from pc_price_tracker.cli import app"
 
       - name: Run test suite
-        # 99 tests, all offline: driven by tests/fixtures/*.json (real
-        # captured Regard listings) and config/data YAML checked into the
-        # repo, or exercising BaseSource against a fake httpx.Client
-        # stand-in (test_source_base.py) — nothing here makes a real
-        # network call. Verified locally before this workflow was written:
-        # `pytest -q` -> "99 passed in 0.52s".
+        # 119 tests, all offline: driven by tests/fixtures/* (real captured
+        # Regard listing JSON, and real captured Citilink catalog markup)
+        # and config/data YAML checked into the repo, or exercising
+        # BaseSource against a fake httpx.Client stand-in
+        # (test_source_base.py) — nothing here makes a real network call.
+        #
+        # test_source_citilink.py covers the browser-backed source WITHOUT
+        # a browser: `.[browser]` is deliberately not installed above, no
+        # Chromium is downloaded, and nothing launches one. It parses saved
+        # markup and hand-built httpx responses, so the parsing, block
+        # detection and checkpointing logic is all verified here while live
+        # scraping stays excluded (see the note below).
         run: python -m pytest -q
 
   # Deliberately NOT covered by this workflow, and why:
@@ -54,13 +60,25 @@ jobs:
   # - Live scraping against Regard/Citilink
   #   (src/pc_price_tracker/sources/{regard,citilink}.py) needs real
   #   network access to third-party retail sites from a CI runner, which is
-  #   both unreliable (markup drift, WAF/rate-limiting — citilink.py's own
-  #   module docstring documents it being permanently 429-blocked by
-  #   Qrator) and not something this project should be hammering those
-  #   sites with on every push/PR. The request-handling and normalization
-  #   logic that actually matters (robots.txt handling, WAF detection,
-  #   retry/backoff, cross-source key matching) is already covered offline
-  #   by test_source_base.py and test_cross_source_matching.py.
+  #   both unreliable (markup drift, WAF/rate-limiting) and not something
+  #   this project should be hammering those sites with on every push/PR.
+  #   The request-handling and normalization logic that actually matters
+  #   (robots.txt handling, WAF detection, retry/backoff, cross-source key
+  #   matching, listing parsing, per-page checkpointing) is already covered
+  #   offline by test_source_base.py, test_source_citilink.py and
+  #   test_cross_source_matching.py.
+  #
+  #   NOTE — this used to say Citilink was "permanently 429-blocked by
+  #   Qrator". That is no longer true: the owner lifted the project's
+  #   no-browser rule on 29.08.2026 and Citilink now works through a real
+  #   browser (see sources/citilink.py). It is still excluded from CI, but
+  #   for the ordinary reason every live source is — not because it's dead.
+  #
+  # - The browser itself (`.[browser]` / Playwright + Chromium) is NOT
+  #   installed in CI. Nothing in the test suite needs it: sources/browser.py
+  #   imports playwright lazily, so the module imports and its pure logic
+  #   (challenge detection, header adaptation) is unit-tested without a
+  #   browser binary anywhere near the runner.
   # - The affiliate feed adapter (sources/affiliate_feed.py) is tested
   #   against a hand-built sample feed (test_affiliate_feed.py) rather than
   #   a live Admitad/ePN feed: config/feeds.yaml ships with feed_url: null

@@ -76,14 +76,21 @@ class RegardSource(BaseSource):
             resp = self.get(url)
             items, total = self._parse_listing(resp.text, cat_id)
 
-            new_count = 0
+            page_offers: list[RawOffer] = []
             for item in items:
                 ext_id = str(item["id"])
                 if ext_id in seen_ids:
                     continue
                 seen_ids.add(ext_id)
-                new_count += 1
-                offers.append(self._to_raw_offer(item, category, captured_at))
+                page_offers.append(self._to_raw_offer(item, category, captured_at))
+            new_count = len(page_offers)
+
+            # Commit this page before fetching the next one. A category can
+            # run to a dozen pages; if the process dies partway, everything
+            # already fetched must survive rather than evaporate with the
+            # in-memory list.
+            self._checkpoint(page_offers)
+            offers.extend(page_offers)
 
             self.log.info(
                 "page_fetched",
@@ -99,7 +106,7 @@ class RegardSource(BaseSource):
                 break
             if total and len(seen_ids) >= total:
                 break
-            if page >= self.MAX_PAGES:
+            if page >= self.max_pages:
                 self.log.warning("max_pages_reached", category=category, page=page)
                 break
 

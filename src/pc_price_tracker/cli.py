@@ -39,6 +39,48 @@ def _ingest(conn: sqlite3.Connection, raw_offers: list[RawOffer]) -> tuple[int, 
     return ok, failed
 
 
+class _CheckpointIngest:
+    """Persists each unit of work the moment a source finishes it.
+
+    Portfolio hard rule, and the reason it exists: a long scrape that keeps
+    everything in memory until one final save loses ALL of it when the
+    process dies — which has actually happened here (a mid-run machine
+    shutdown, and an external process kill that stopped a scraper silently
+    after 8 of 11 units). A source calls BaseSource._checkpoint() after each
+    catalog page; this ingests and COMMITS that page immediately, so a death
+    on page 7 still leaves pages 1-6 durably in the database.
+
+    It also tracks what it has already written, so the tail-ingest below
+    can't double-count offers a checkpointing source already persisted —
+    which keeps this safe for sources that checkpoint partially or not at
+    all.
+    """
+
+    def __init__(self, conn: sqlite3.Connection) -> None:
+        self.conn = conn
+        self.ok = 0
+        self.failed = 0
+        self.total = 0
+        self.checkpoints = 0
+        self._seen: set[tuple[str, str]] = set()
+
+    def __call__(self, offers: list[RawOffer]) -> None:
+        pending = [o for o in offers if (o.source, o.external_id) not in self._seen]
+        if not pending:
+            return
+        ok, failed = _ingest(self.conn, pending)
+        for offer in pending:
+            self._seen.add((offer.source, offer.external_id))
+        self.ok += ok
+        self.failed += failed
+        self.total += len(pending)
+        self.checkpoints += 1
+
+    def finish(self, raw_offers: list[RawOffer]) -> None:
+        """Ingest whatever the source returned but never checkpointed."""
+        self(raw_offers)
+
+
 def _validate_category(category: str) -> None:
     if category not in CATEGORIES:
         typer.echo(f"Неизвестная категория {category!r}. Доступные: {', '.join(CATEGORIES)}", err=True)
@@ -55,6 +97,9 @@ def _validate_source(source: str) -> None:
 def scrape(
     source: str = typer.Option(..., "--source", help="Источник, например regard"),
     category: str = typer.Option(..., "--category", help="Категория: " + ", ".join(CATEGORIES)),
+    max_pages: int | None = typer.Option(
+        None, "--max-pages", help="Ограничить число страниц каталога (для небольших проверочных прогонов)"
+    ),
     db_path: Path = typer.Option(DEFAULT_DB_PATH, "--db"),
 ) -> None:
     """Один прогон: один источник, одна категория."""
@@ -64,16 +109,21 @@ def scrape(
     db_path.parent.mkdir(parents=True, exist_ok=True)
     conn = db_module.connect(db_path)
     captured_at = datetime.now()
-    src = SOURCES[source]()
+    sink = _CheckpointIngest(conn)
+    src = SOURCES[source](offer_sink=sink, max_pages=max_pages)
     try:
         raw_offers = src.fetch_category(category, captured_at)
     except SourceBlocked as exc:
+        # Whatever was checkpointed before the block is already committed —
+        # report it rather than implying the whole run was lost.
         log.error("source_blocked", source=source, category=category, error=str(exc))
         typer.echo(f"Источник {source} остановлен: {exc}", err=True)
+        if sink.total:
+            typer.echo(f"Сохранено до остановки: {sink.total} офферов ({sink.ok} нормализовано)", err=True)
         raise typer.Exit(1) from exc
 
-    ok, failed = _ingest(conn, raw_offers)
-    typer.echo(f"{source}/{category}: {len(raw_offers)} офферов, {ok} нормализовано, {failed} в unmatched")
+    sink.finish(raw_offers)
+    typer.echo(f"{source}/{category}: {sink.total} офферов, {sink.ok} нормализовано, {sink.failed} в unmatched")
 
 
 @app.command("scrape-all")
@@ -85,18 +135,29 @@ def scrape_all(db_path: Path = typer.Option(DEFAULT_DB_PATH, "--db")) -> None:
 
     total_ok = total_failed = 0
     for source_name, source_cls in SOURCES.items():
+        # One instance per source, as before: it caches that site's
+        # robots.txt for the run, so building a fresh one per category would
+        # re-fetch robots.txt eight times over for no benefit.
         src = source_cls()
         for category in CATEGORIES:
+            # One sink per (source, category): that pairing is the unit of
+            # work this loop already recovers from, and a fresh sink keeps
+            # each unit's reported numbers its own.
+            sink = _CheckpointIngest(conn)
+            src.offer_sink = sink
             try:
                 raw_offers = src.fetch_category(category, captured_at)
             except SourceBlocked as exc:
                 log.error("source_blocked", source=source_name, category=category, error=str(exc))
-                typer.echo(f"[{source_name}/{category}] остановлено: {exc}", err=True)
+                note = f" (сохранено до остановки: {sink.total})" if sink.total else ""
+                typer.echo(f"[{source_name}/{category}] остановлено: {exc}{note}", err=True)
+                total_ok += sink.ok
+                total_failed += sink.failed
                 continue
-            ok, failed = _ingest(conn, raw_offers)
-            total_ok += ok
-            total_failed += failed
-            typer.echo(f"[{source_name}/{category}] {len(raw_offers)} офферов, {ok} ок, {failed} unmatched")
+            sink.finish(raw_offers)
+            total_ok += sink.ok
+            total_failed += sink.failed
+            typer.echo(f"[{source_name}/{category}] {sink.total} офферов, {sink.ok} ок, {sink.failed} unmatched")
 
     typer.echo(f"Готово: {total_ok} офферов нормализовано, {total_failed} в unmatched")
 

@@ -16,6 +16,20 @@ dependencies = [
 dev = [
     "pytest>=8.0",
 ]
+# OPTIONAL, and deliberately not a core dependency. Only the Citilink
+# adapter needs a real browser (see sources/citilink.py for the 29.08.2026
+# policy change that allows one). Keeping it out of `dependencies` means:
+#   - `pip install -e .` stays small and pure-Python;
+#   - CI installs `.[dev]` only, never downloads a browser, and never runs
+#     one — live scraping remains excluded from CI on purpose;
+#   - importing pc_price_tracker without playwright still works. The import
+#     is lazy inside sources/browser.py, and a missing browser surfaces as
+#     SourceBlocked for that one source rather than breaking the package.
+# Install with:
+#   pip install -e ".[browser]" && python -m playwright install chromium
+browser = [
+    "playwright>=1.40",
+]
 
 [project.scripts]
 pc-price-tracker = "pc_price_tracker.cli:app"

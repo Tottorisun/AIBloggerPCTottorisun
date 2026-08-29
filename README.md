@@ -1,4 +1,98 @@
-# Development Notes
+# pc-price-tracker
 
-- 2026-08-24: added a Claude Code PostToolUse hook (`.claude/settings.json`, script `.claude/hooks/sources_pytest_hook.py`) that runs pytest after Edit/Write/MultiEdit touches a `.py` file under a `sources/` directory, and prints the result.
-- It runs `tests/test_<name>.py` or `tests/test_source_<name>.py` when one exists for the touched module, otherwise it falls back to the full suite (99 tests, <1s). Only `base.py` (via `test_source_base.py`) and `affiliate_feed.py` currently have a dedicated test file — `citilink.py` and `regard.py` do not, so edits to those fall back to the full suite.
+Ежедневный сбор цен на ПК-комплектующие для контент-конвейера.
+
+## Источники
+
+| Источник | Транспорт | Статус |
+|---|---|---|
+| Regard (`regard.ru`) | обычный HTTP | работает, данные из встроенного `__NEXT_DATA__` |
+| Ситилинк (`citilink.ru`) | **реальный браузер** (Playwright) | работает с 29.08.2026, см. ниже |
+| Партнёрские фиды (Admitad, ePN) | обычный HTTP | адаптер готов, фид не подключён (`config/feeds.yaml`: `feed_url: null`) |
+
+## Правило про браузер — изменено 29.08.2026
+
+Раньше в проекте действовало жёсткое правило:
+
+> no headless browser, no JS execution, no CAPTCHA/challenge solving
+
+Из-за него Ситилинк был помечен как «не поддерживается навсегда»: сайт стоит
+за защитой Qrator, и любой обычный HTTP-запрос получал 429.
+
+**Владелец снял запрет на браузер 29.08.2026** («можешь запускать
+полноценный браузер когда нужно»). Поэтому Ситилинк теперь собирается через
+настоящий Chromium.
+
+**Запрет на капчу НЕ снят и снят не будет.** Мы не решаем проверки — ни
+библиотекой, ни платным сервисом, ни подстановкой токенов, ни опциями вида
+`solve_*`. Если проверка реально показана, парсер останавливается и
+сообщает, что источник заблокирован. Браузер нужен, чтобы выглядеть обычным
+посетителем и прочитать страницу с JS, а не чтобы обходить преграду.
+
+Подробности и результаты живой проверки — в docstring
+`src/pc_price_tracker/sources/citilink.py`, оценка источников — в
+`AI_CONTEXT/TASKS/SCRAPLING_EVAL.md`.
+
+### Что это значит на практике
+
+- Ничего в защите Ситилинка не обходится: обычный браузер её просто
+  проходит, потому что он выполняет JS страницы, как браузер любого
+  покупателя.
+- `robots.txt` проверяется на **каждом** прогоне нашим же парсером
+  (`sources/robots.py`). У Ситилинка нет группы `User-agent: *` — только
+  Yandex, Googlebot и Applebot, — поэтому правил, связывающих нас, нет.
+  Если группа появится, следующий прогон остановится сам.
+- Темп сознательно медленный: 2–4 с между переходами, немного страниц за
+  прогон, честный User-Agent с контактным адресом.
+
+## Установка
+
+```bash
+pip install -e ".[dev]"                 # ядро + тесты, без браузера
+pip install -e ".[browser]"             # + Playwright (нужен только Ситилинку)
+python -m playwright install chromium
+```
+
+Playwright — **необязательная** зависимость. Без неё пакет, CLI и тесты
+работают полностью; недоступность браузера превращается в `SourceBlocked`
+для одного источника, а не в поломку сборки.
+
+## Использование
+
+```bash
+pc-price-tracker scrape --source citilink --category cpu --max-pages 1
+pc-price-tracker scrape-all
+pc-price-tracker compare --category cpu     # сравнение цен между магазинами
+pc-price-tracker build --budget 100000 --profile gaming
+pc-price-tracker backup
+pc-price-tracker health
+```
+
+## Сохранение по ходу работы (checkpoint)
+
+Длинный сбор **обязан** сохранять каждую завершённую единицу работы сразу, а
+не копить всё в памяти до финального сохранения. Правило появилось после
+реальных потерь: выключение ПК посреди прогона и тихое убийство процесса
+снаружи.
+
+Как это устроено здесь: источник вызывает `BaseSource._checkpoint()` после
+каждой страницы каталога, а CLI (`_CheckpointIngest`) тут же нормализует её и
+делает `commit`. Если прогон умрёт на 7-й странице, страницы 1–6 уже лежат в
+базе. Проверено настоящим `SIGKILL` посреди прогона, а не чтением кода.
+
+## CI
+
+CI ставит только `.[dev]`, компилирует всё, импортирует CLI и гоняет тесты
+(119, все офлайн, <1 с). Живой парсинг в CI по-прежнему **исключён
+намеренно** — и браузер в CI не ставится и не запускается.
+
+## Заметки разработки
+
+- 2026-08-24: добавлен Claude Code PostToolUse hook (`.claude/settings.json`,
+  скрипт `.claude/hooks/sources_pytest_hook.py`), который запускает pytest
+  после Edit/Write/MultiEdit по `.py` в каталоге `sources/`.
+- Он запускает `tests/test_<name>.py` или `tests/test_source_<name>.py`, если
+  такой файл есть, иначе весь набор. Сейчас свои файлы тестов есть у
+  `base.py` (`test_source_base.py`), `affiliate_feed.py`
+  (`test_affiliate_feed.py`) и `citilink.py` (`test_source_citilink.py`);
+  у `regard.py` — нет, правки в нём запускают весь набор.
